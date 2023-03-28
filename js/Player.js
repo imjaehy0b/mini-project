@@ -1,16 +1,25 @@
 class Player {
-    constructor(x, y) {
-        this.x = x;
-        this.y = y;
+    constructor(width, height) {
+        this.position = {
+            x: 500,
+            y: 300,
+        }
+        this.width = width;
+        this.height = height;
         this.img = new Image();
         this.img.src = "../images/player.png";
+        
     }
 
     /** @param {CanvasRenderingContext2D} ctx */
     draw(ctx) {
         this.img.onload = () => {
-            ctx.drawImage(this.img, this.x, this.y, 50, 80);
+            ctx.drawImage(this.img, this.position.x, this.position.y, this.width, this.height);
         }
+    }
+
+    update() {
+        this.position.x += 10;
     }
 }
 

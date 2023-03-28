@@ -1,7 +1,12 @@
 class Background {
-    constructor(x, y) {
-        this.x = x;
-        this.y = y;
+    constructor(width, height) {
+        this.position = {
+            x: 0,
+            y: 0,
+        }
+        
+        this.width = width;
+        this.height = height;
         this.img = new Image();
         this.img.src = "../images/map.png";
     }
@@ -9,7 +14,7 @@ class Background {
     /** @param {CanvasRenderingContext2D} ctx */
     draw(ctx) {
         this.img.onload = () => {
-            ctx.drawImage(this.img, this.x, this.y, 1024, 768);        
+            ctx.drawImage(this.img, this.position.x, this.position.y, this.width, this.height);        
         }
     }
 }

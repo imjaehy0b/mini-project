@@ -8,12 +8,35 @@ const ctx = canvas.getContext("2d");
 
 canvas.width = 1024;
 canvas.height = 768;
+const playerWidth = 50;
+const playerHeight = 80;
 
-ctx.fillStyle = "white";
-ctx.fillRect(0, 0,  canvas.width, canvas.height);
+const background = new Background(canvas.width, canvas.height);
+const player = new Player(playerWidth, playerHeight);
 
-const background = new Background(0, 0);
-background.draw(ctx);
+function animate() {
+    window.requestAnimationFrame(animate);
+    
+    background.draw(ctx);
+    player.draw(ctx);
+    player.update();
+}
 
-const player = new Player(500, 300);
-player.draw(ctx);
+animate();
+
+window.addEventListener("keydown", (event) => {
+    console.log(event);
+    switch (event.key) {
+        case "w": 
+            break;
+
+        case "a":
+            break;
+
+        case "s":
+            break;
+            
+        case "d":
+            break;
+    }
+})
