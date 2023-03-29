@@ -8,7 +8,7 @@ class Background {
         this.width = width;
         this.height = height;
         this.img = new Image();
-        this.img.src = "../images/map.png";
+        this.img.src = "../images/temp map2.png";
     }
 
     /** @param {CanvasRenderingContext2D} ctx */
