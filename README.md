@@ -21,3 +21,7 @@ Canvas API를 이용한 미니 게임 프로젝트
 - 이미지 리소스 생성
 - class 생성
 - background, player canvas에 생성
+
+<b>3/29</b>
+- player 움직임 구현
+- 벽 혹은 물체와의 collision detection 구현 
