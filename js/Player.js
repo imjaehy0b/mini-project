@@ -13,13 +13,24 @@ class Player {
 
     /** @param {CanvasRenderingContext2D} ctx */
     draw(ctx) {
-        this.img.onload = () => {
-            ctx.drawImage(this.img, this.position.x, this.position.y, this.width, this.height);
-        }
-    }
+        // ctx.fillStyle = "red";
+        // ctx.fillRect(this.position.x, this.position.y, 50, 50);
+        ctx.drawImage(this.img, this.position.x, this.position.y, this.width, this.height);
 
-    update() {
-        this.position.x += 10;
+        // this.img.onload = () => {
+        //     ctx.drawImage(this.img, this.position.x, this.position.y, this.width, this.height);
+        // } 
+    }
+    
+    update(direction) {      
+        if (direction.up)
+            this.position.y -= 5;
+        else if (direction.down)
+            this.position.y += 5;
+        else if (direction.left)
+            this.position.x -= 5;
+        else if(direction.right)
+            this.position.x += 5;
     }
 }
 

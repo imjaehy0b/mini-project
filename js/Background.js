@@ -13,9 +13,7 @@ class Background {
 
     /** @param {CanvasRenderingContext2D} ctx */
     draw(ctx) {
-        this.img.onload = () => {
-            ctx.drawImage(this.img, this.position.x, this.position.y, this.width, this.height);        
-        }
+        ctx.drawImage(this.img, this.position.x, this.position.y, this.width, this.height);        
     }
 }
 
