@@ -24,8 +24,18 @@ class GameCanvas {
 
         this.background = new Background(this.WIDTH, this.HEIGHT);
         this.player = new Player();
-        this.box = new Box();
 
+        let positions = [
+            {x: 40, y: 40},
+            {x: 100, y: 100},
+            {x: 150, y: 150}
+        ];
+        
+        this.boxes = [];
+        positions.forEach((position) => {
+            this.boxes.push(new Box({position}));
+        })
+     
         this.canvas.addEventListener("keydown", (event) => {
             console.log(event);
 
@@ -85,7 +95,10 @@ class GameCanvas {
         this.player.update();   
         this.player.checkCollisions();
         this.background.draw(this.ctx);
-        this.box.draw(this.ctx);
+        for(var box of this.boxes) {
+            box.draw(this.ctx);
+        }
+        // this.box.draw(this.ctx);
         this.player.draw(this.ctx);
     }
 

@@ -1,11 +1,11 @@
 export default class Box {
-    constructor(width=32, height=32) {
-        this.width = width;
-        this.height = height;
+    constructor({ position }) {
+        this.width = 32;
+        this.height = 32;
 
         this.position = {
-            x: 96,
-            y: 96,
+            x: position.x,
+            y: position.y,
         };
 
         this.img = new Image();

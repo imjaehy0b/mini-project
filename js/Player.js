@@ -12,10 +12,10 @@ export default class {
             y: 40,
         };
                             
-        this.index = {
-            x: Math.floor(this.position.x / 32),
-            y: Math.floor(this.position.y / 32),
-        };
+        // this.index = {
+        //     x: Math.floor(this.position.x / 32),
+        //     y: Math.floor(this.position.y / 32),
+        // };
 
         this.direction = {
             up: false,
