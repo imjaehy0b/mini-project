@@ -11,7 +11,6 @@ const background1 = [2538, 2538, 2538, 2538, 2538, 2538, 2538, 2538,
     const rows = []
     for (let i = 0; i < this.length; i+=8) {
         rows.push(this.slice(i, i+8))
-        console.log(rows);
     }
 
     return rows;

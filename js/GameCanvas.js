@@ -2,6 +2,7 @@
 
 import Background from "./Background.js";
 import Player from "./Player.js";
+import Box from "./Box.js";
 
 class GameCanvas {
     constructor() {
@@ -23,46 +24,50 @@ class GameCanvas {
 
         this.background = new Background(this.WIDTH, this.HEIGHT);
         this.player = new Player();
+        this.box = new Box();
 
         this.canvas.addEventListener("keydown", (event) => {
             console.log(event);
+
+            let { direction }= this.player;
             switch (event.key) {
                 case "w":
-                    this.player.direction.up = true;
+                    direction.up = true;
                     break;
         
                 case "s":
-                    this.player.direction.down = true;
+                    direction.down = true;
                     break;
         
                 case "a":
-                    this.player.direction.left = true;
+                    direction.left = true;
                     break;
         
                 case "d":
-                    this.player.direction.right = true;
+                    direction.right = true;
                     break;
             }
         });
         
         this.canvas.addEventListener("keyup", (event) => {
-
             console.log(event);
+
+            let { direction }= this.player;
             switch (event.key) {
                 case "w":
-                    this.player.direction.up = false;
+                    direction.up = false;
                     break;
         
                 case "s":
-                    this.player.direction.down = false;
+                    direction.down = false;
                     break;
         
                 case "a":
-                    this.player.direction.left = false;
+                    direction.left = false;
                     break;
         
                 case "d":
-                    this.player.direction.right = false;
+                    direction.right = false;
                     break;
             }
         });
@@ -80,6 +85,7 @@ class GameCanvas {
         this.player.update();   
         this.player.checkCollisions();
         this.background.draw(this.ctx);
+        this.box.draw(this.ctx);
         this.player.draw(this.ctx);
     }
 
