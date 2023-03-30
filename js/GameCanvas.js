@@ -1,102 +1,140 @@
 /** @type {HTMLCanvasElement} */
 
 import Background from "./Background.js";
-import CollisionBlock, {collisionBlocks} from "./collision.js";
 import Player from "./Player.js";
 
-const canvas = document.getElementById("canvas");
-const ctx = canvas.getContext("2d");
+class GameCanvas {
+    constructor() {
+        this.canvas = document.getElementById("canvas");
+        this.canvas.setAttribute("tabindex", "0");
+        this.canvas.focus();
 
-canvas.width = 256;
-canvas.height = 256;
-const playerWidth = 30;
-const playerHeight = 48;
+        /*
+        this.canvas.addEventListener 오류 고치는 방법 
+        This is because canvas elements do not have focus by default, so they don't receive keyboard events.
+        To fix this, you can add the tabindex attribute to the canvas element to give it focus, and then call the focus() method on it to make it active:
+        */
 
-let direction = {
-    up: false,
-    down: false,
-    left: false,
-    right: false,
+        this.ctx = this.canvas.getContext("2d");
+        this.WIDTH = 256;
+        this.HEIGHT = 256;
+        this.canvas.width = this.WIDTH;
+        this.canvas.height = this.HEIGHT;
+
+        this.background = new Background(this.WIDTH, this.HEIGHT);
+        this.player = new Player();
+
+        this.canvas.addEventListener("keydown", (event) => {
+            console.log(event);
+            switch (event.key) {
+                case "w":
+                    this.player.direction.up = true;
+                    break;
+        
+                case "s":
+                    this.player.direction.down = true;
+                    break;
+        
+                case "a":
+                    this.player.direction.left = true;
+                    break;
+        
+                case "d":
+                    this.player.direction.right = true;
+                    break;
+            }
+        });
+        
+        this.canvas.addEventListener("keyup", (event) => {
+
+            console.log(event);
+            switch (event.key) {
+                case "w":
+                    this.player.direction.up = false;
+                    break;
+        
+                case "s":
+                    this.player.direction.down = false;
+                    break;
+        
+                case "a":
+                    this.player.direction.left = false;
+                    break;
+        
+                case "d":
+                    this.player.direction.right = false;
+                    break;
+            }
+        });
+    }
+
+    run() {
+        // window.requestAnimationFrame(run);
+        requestAnimationFrame(this.run.bind(this));
+        
+        /*
+        In the run() method of the GameCanvas class, window.requestAnimationFrame(run) should be changed to window.requestAnimationFrame(this.run.bind(this)). 
+        This is because run is not defined in the current scope, but this.run refers to the run method of the current object (i.e., the GameCanvas instance).
+        */
+
+        this.player.update();   
+        this.player.checkCollisions();
+        this.background.draw(this.ctx);
+        this.player.draw(this.ctx);
+    }
+
+    
 }
 
-const background = new Background(canvas.width, canvas.height);
-const player = new Player(playerWidth, playerHeight);
+const gameCanvas = new GameCanvas();
+gameCanvas.run();
 
-const walls = [
-    { x: 0, y: 0, width: 256, height: 32 },
-    { x: 0, y: 32, width: 32, height: 224 },
-    { x: 224, y: 32, width: 32, height: 224 },
-    { x: 32, y: 224, width: 192, height: 32 },
-    // add more walls here
-  ];
+// const gameCanvas = new GameCanvas();
+// gameCanvas.ctx.fillStyle = "white";
+// gameCanvas.ctx.fillRect(0, 0, 20, 20);
+
+// player.js로 이동 
+// const playerWidth = 30;
+// const playerHeight = 48;
+
+// player.js로 이동 
+// let direction = {
+//     up: false,
+//     down: false,
+//     left: false,
+//     right: false, 
+// };
+
+/*
+const background = new Background(WIDTH, HEIGHT);
+const player = new Player();
 
 function animate() {
     window.requestAnimationFrame(animate);
     background.draw(ctx);
 
-    // collisionBlocks.forEach((CollisionBlock) => {
-    //     CollisionBlock.draw(ctx);
-    // })
-    player.update(direction);
+    collisionBlocks.forEach((CollisionBlock) => {
+        CollisionBlock.draw(ctx);
+    })
 
+    player.update();
+
+    // // player.js로 이동 후 함수화 
     for (const wall of walls) {
         if (player.collidesWith(wall)) {
-          if (direction.up) player.position.y = wall.y + wall.height;
-          else if (direction.down) player.position.y = wall.y - player.height;
-          else if (direction.left) player.position.x = wall.x + wall.width;
-          else if (direction.right) player.position.x = wall.x - player.width;
+          if (player.direction.up) player.position.y = wall.y + wall.height;
+          else if (player.direction.down) player.position.y = wall.y - player.height;
+          else if (player.direction.left) player.position.x = wall.x + wall.width;
+          else if (player.direction.right) player.position.x = wall.x - player.width;
         }
       }
 
     player.draw(ctx);
 }
 
-window.addEventListener("mousedown", (event) => {
-    console.log(event);
-})
-
-window.addEventListener("keydown", (event) => {
-   
-    console.log(event);
-    switch (event.key) {
-        case "w":
-            direction.up = true;
-            break;
-
-        case "s":
-            direction.down = true;
-            break;
-
-        case "a":
-            direction.left = true;
-            break;
-
-        case "d":
-            direction.right = true;
-            break;
-    }
-});
-
-window.addEventListener("keyup", (event) => {
-
-    console.log(event);
-    switch (event.key) {
-        case "w":
-            direction.up = false;
-            break;
-
-        case "s":
-            direction.down = false;
-            break;
-
-        case "a":
-            direction.left = false;
-            break;
-
-        case "d":
-            direction.right = false;
-            break;
-    }
-});
+// window.addEventListener("mousedown", (event) => {
+//     console.log(event);
+// })
 
 animate();
+*/

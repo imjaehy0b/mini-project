@@ -1,67 +1,62 @@
-class Player {
-    constructor(width, height) {
+import { walls } from "../data/Wall.js";
+
+export default class {
+    constructor(width = 30, height = 48) {
         this.position = {
             x: 115,
             y: 105,
-        }
+        }                    
+
+        this.direction = {
+            up: false,
+            down: false,
+            left: false,
+            right: false, 
+        };
+
         this.width = width;
         this.height = height;
         this.img = new Image();
         this.img.src = "../images/player.png";
-        
     }
-
-    /** @param {CanvasRenderingContext2D} ctx */
+    
     draw(ctx) { 
         ctx.drawImage(this.img, this.position.x, this.position.y, this.width, this.height);
     }
     
-    update(direction) {      
-        if (direction.up)
-            this.position.y -= 3;
-        else if (direction.down)
-            this.position.y += 3;
-        else if (direction.left)
-            this.position.x -= 3;
-        else if (direction.right)
-            this.position.x += 3;
-            
-        // if (direction.up)
-        //     if (this.position.y + this.height > 170) {
-        //         if(this.position.y + this.height > 355 && this.position.x + this.width/2 > 585 && this.position.x + this.width/2 < 685 ) {
-                    
-        //         } else {
-        //             this.position.y -= 5;
-        //         }
-        //     } else {
-        //         this.position.y += 5;
-
-        //     }
-        // else if (direction.down)
-        //     if(this.position.y + this.height < 610)
-        //         this.position.y += 5;
-        //     else 
-        //         this.position.y -= 5;
-        // else if (direction.left)
-        //     if(this.position.x + this.width/2 > 165)
-        //         this.position.x -= 5;
-        //     else 
-        //         this.position.x += 5;
-        // else if(direction.right)
-        //     if(this.position.x + this.width/2 < 855)
-        //         this.position.x += 5;
-        //     else 
-        //         this.position.x -= 5;
+    update() {      
+        if (this.direction.up)
+            this.position.y -= 5;
+        else if (this.direction.down)
+            this.position.y += 5;
+        else if (this.direction.left)
+            this.position.x -= 5;
+        else if (this.direction.right)
+            this.position.x += 5;
     }
 
-    collidesWith(rectangle) {
+    checkCollisions() {
+        for (const wall of walls) {
+            if (this.collidesWith(wall)) {
+                if (this.direction.up) this.position.y = wall.y + wall.height;
+                else if (this.direction.down) this.position.y = wall.y - this.height;
+                else if (this.direction.left) this.position.x = wall.x + wall.width;
+                else if (this.direction.right) this.position.x = wall.x - this.width;
+            }
+        }
+    }
+
+    collidesWith(obstacle) {
         return (
-          this.position.x < rectangle.x + rectangle.width &&
-          this.position.x + this.width > rectangle.x &&
-          this.position.y < rectangle.y + rectangle.height &&
-          this.position.y + this.height > rectangle.y
+          this.position.x < obstacle.x + obstacle.width &&
+          this.position.x + this.width > obstacle.x &&
+          this.position.y < obstacle.y + obstacle.height &&
+          this.position.y + this.height > obstacle.y
+          // wall(obstacle)가 없는 영역에서는 무조건 하나의 조건은 false
+          // 하지만 벽 혹은 물체의 영역을 침범하면 모두 참이 되어 true
         );
       }
 }
 
-export default Player;
+
+
