@@ -25,3 +25,10 @@ Canvas API를 이용한 미니 게임 프로젝트
 <b>3/29</b>
 - player 움직임 구현
 - 벽 혹은 물체와의 collision detection 구현 
+
+<b>3/30</b>
+- 작성한 프로젝트 코드를 객체지향적으로 구조화 
+- canvas에 addEventListener 메서드가 없어 아래 구문 추가로 문제 해결 
+  this.canvas.setAttribute("tabindex", "0");
+  this.canvas.focus();
+- Box.js에 Box class 구현 및 canvas에 그리기 (collision detection 구현)
