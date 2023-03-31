@@ -1,22 +1,17 @@
-import { map2d, walls } from "../data/Wall.js";
+import { walls } from "../data/Wall.js";
 
 export default class {
-    constructor(width = 30, height = 48) {
+    constructor(width = 32, height = 32) {
         this.width = width;
         this.height = height;
         this.img = new Image();
         this.img.src = "../images/player.png";
 
         this.position = {
-            x: 40,
-            y: 40,
+            x: 50,
+            y: 180,
         };
                             
-        // this.index = {
-        //     x: Math.floor(this.position.x / 32),
-        //     y: Math.floor(this.position.y / 32),
-        // };
-
         this.direction = {
             up: false,
             down: false,
@@ -24,7 +19,7 @@ export default class {
             right: false, 
         };
 
-       
+        this.isGrab = false;
     }
 
     draw(ctx) { 
@@ -43,23 +38,23 @@ export default class {
         }
     }
     
-    // update() {      
-    //     if (this.direction.up) {
-    //         this.position.y -= 1;
-    //         this.index.y = Math.floor(this.position.y / 32);
-    //     } else if (this.direction.down) {
-    //         this.position.y += 1;
-    //         this.index.y = Math.floor(this.position.y / 32);
-    //     } else if (this.direction.left) {
-    //         this.position.x -= 1;
-    //         this.index.x = Math.floor(this.position.x / 32)
-    //     } else if (this.direction.right) {
-    //         this.position.x += 1;
-    //         this.index.x = Math.floor(this.position.x / 32)
-    //     }
-    // }
+    checkCollisionsWithBoxes(boxes) {
+        for (const box of boxes) {
+            if (this.collidesWith(box)) {
+                if (this.direction.up) {
+                    box.y -= 5;
+                } else if (this.direction.down) {
+                    box.y += 5;
+                } else if (this.direction.left) {
+                    box.x -= 5;
+                } else if (this.direction.right) {
+                    box.x += 5;
+                }
+            }
+        }
+    }
 
-    checkCollisions() {
+    checkCollisionsWithWalls() {
         for (const wall of walls) {
             if (this.collidesWith(wall)) {
                 if (this.direction.up) this.position.y = wall.y + wall.height;
@@ -69,27 +64,6 @@ export default class {
             }
         }
     }
-
-    // checkCollisions() {
-    //     console.log(this.index.x, this.index.y);
-    //     if(map2d[this.index.x][this.index.y] == 1) {
-    //         if (this.direction.up) {
-    //             console.log(this.position.y);
-    //             this.position.y = (this.index.y+1) * 32;
-    //             console.log(this.position.y);
-    //             this.index.y = Math.floor(this.position.y / 32);
-    //         } else if (this.direction.down) {
-    //             console.log(this.position.y);
-    //             this.position.y = (this.index.y-2) * 32;
-    //             console.log(this.position.y);
-    //             this.index.y = Math.floor(this.position.y / 32);
-    //         }
-    //         if (this.direction.up) this.position.y = wall.y + wall.height;
-    //         else if (this.direction.down) this.position.y = wall.y - this.height;
-    //         else if (this.direction.left) this.position.x = wall.x + wall.width;
-    //         else if (this.direction.right) this.position.x = wall.x - this.width;
-    //     }
-    // }
 
     collidesWith(obstacle) {
         return (
