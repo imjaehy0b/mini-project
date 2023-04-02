@@ -1,9 +1,7 @@
 /** @type {HTMLCanvasElement} */
 
-import Background from "./Background.js";
+import Map from "./map.js";
 import Player from "./Player.js";
-import Box from "./Box.js";
-import { boxProperties } from "/data/Wall.js";
 
 export default class GameCanvas {
     constructor() {
@@ -18,21 +16,25 @@ export default class GameCanvas {
         */
 
         this.ctx = this.canvas.getContext("2d");
-        this.WIDTH = 256;
-        this.HEIGHT = 256;
+        this.WIDTH = 512;
+        this.HEIGHT = 512;
         this.canvas.width = this.WIDTH;
         this.canvas.height = this.HEIGHT;
 
-        this.background = new Background(this.WIDTH, this.HEIGHT);
+        // this.background = new Background(this.WIDTH, this.HEIGHT);
+
+        // this.player = new Player();
+        this.map = new Map();
         this.player = new Player();
-        
-        this.boxes = [];
-        boxProperties.forEach((boxProperty) => {
-            this.boxes.push(new Box(boxProperty.x, boxProperty.y));
-        })
+        // this.walls = walls;
+        // this.boxes = [];
+        // boxProperties.forEach((boxProperty) => {
+        //     this.boxes.push(new Box(boxProperty.x, boxProperty.y));
+        // })
      
         this.canvas.addEventListener("keydown", (event) => {
             let { direction }= this.player;
+
             switch (event.key) {
                 case "w":
                     direction.up = true;
@@ -49,10 +51,6 @@ export default class GameCanvas {
                 case "d":
                     direction.right = true;
                     break;
-
-                case " ":
-                    this.player.isGrab = true;
-                    break;
             }
         });
         
@@ -61,22 +59,22 @@ export default class GameCanvas {
             switch (event.key) {
                 case "w":
                     direction.up = false;
+                    this.player.dy = 1;
                     break;
         
                 case "s":
                     direction.down = false;
+                    this.player.dy = 1;
                     break;
         
                 case "a":
                     direction.left = false;
+                    this.player.dx = 1;
                     break;
         
                 case "d":
                     direction.right = false;
-                    break;
-
-                case " ":
-                    this.player.isGrab = false;
+                    this.player.dx = 1;
                     break;
             }
         });
@@ -90,14 +88,23 @@ export default class GameCanvas {
         In the run() method of the GameCanvas class, window.requestAnimationFrame(run) should be changed to window.requestAnimationFrame(this.run.bind(this)). 
         This is because run is not defined in the current scope, but this.run refers to the run method of the current object (i.e., the GameCanvas instance).
         */
- 
+        
         this.player.update();   
-        this.player.checkCollisionsWithWalls();
-        this.player.checkCollisionsWithBoxes(this.boxes);
-        this.background.draw(this.ctx);
-        for(let box of this.boxes) {
-            box.draw(this.ctx);
-        }
+        this.player.checkCollisionWith(this.map);
+        
+        this.map.draw(this.ctx);
         this.player.draw(this.ctx);
+        // this.player.draw(this.ctx);
+
+
+
+        // this.player.checkCollisionsWith(this.walls, this.boxes);
+        // this.player.checkCollisionsWith();
+
+        // this.background.draw(this.ctx);
+        // for(let box of this.boxes) {
+        //     box.draw(this.ctx);
+        // }
+        // this.player.draw(this.ctx);
     }
 }

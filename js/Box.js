@@ -1,7 +1,7 @@
 export default class Box {
     constructor(x, y) {
-        this.width = 32;
-        this.height = 32;
+        this.width = 64;
+        this.height = 64;
         this.x = x;
         this.y = y;
         
