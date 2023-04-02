@@ -32,3 +32,10 @@ Canvas API를 이용한 미니 게임 프로젝트
   this.canvas.setAttribute("tabindex", "0");
   this.canvas.focus();
 - Box.js에 Box class 구현 및 canvas에 그리기 (collision detection 구현)
+
+<b>4/2</b>
+- background, walls, collision 제거 후
+이를 map에서 tile, wall, box 객체들로 배경을 표현하게 함
+- px 단위가 아니라 2차원 array의 좌표 단위로 객체를 draw함
+- player의 움직임을 px 단위가 아니라 array의 index 단위로 움직이게 함
+키를 한 번 누르면 오로지 한 칸만 움직임
