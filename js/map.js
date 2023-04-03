@@ -20,13 +20,10 @@ export default class Map {
         for (let i = 0; i < this.map.length; i+=8) {
             this.map2d.push(this.map.slice(i, i+8));
         }
-
-        console.log(this.map2d);
-
+        
         this.mapBlocks = [];
         this.map2d.forEach((row, y) => {
             row.forEach((column, x) => {
-                
                 switch (column) {
                     case 0:
                         this.mapBlocks.push(new Tile(x*64, y*64));

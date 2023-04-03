@@ -21,19 +21,11 @@ export default class GameCanvas {
         this.canvas.width = this.WIDTH;
         this.canvas.height = this.HEIGHT;
 
-        // this.background = new Background(this.WIDTH, this.HEIGHT);
-
-        // this.player = new Player();
         this.map = new Map();
         this.player = new Player();
-        // this.walls = walls;
-        // this.boxes = [];
-        // boxProperties.forEach((boxProperty) => {
-        //     this.boxes.push(new Box(boxProperty.x, boxProperty.y));
-        // })
      
         this.canvas.addEventListener("keydown", (event) => {
-            let { direction }= this.player;
+            let { direction } = this.player;
 
             switch (event.key) {
                 case "w":
@@ -79,6 +71,7 @@ export default class GameCanvas {
             }
         });
     }
+    // init() addeventlistener를 여기로 뺄까? 
 
     run() {
         // window.requestAnimationFrame(run);
@@ -94,17 +87,5 @@ export default class GameCanvas {
         
         this.map.draw(this.ctx);
         this.player.draw(this.ctx);
-        // this.player.draw(this.ctx);
-
-
-
-        // this.player.checkCollisionsWith(this.walls, this.boxes);
-        // this.player.checkCollisionsWith();
-
-        // this.background.draw(this.ctx);
-        // for(let box of this.boxes) {
-        //     box.draw(this.ctx);
-        // }
-        // this.player.draw(this.ctx);
     }
 }
