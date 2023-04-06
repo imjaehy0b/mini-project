@@ -39,3 +39,9 @@ Canvas API를 이용한 미니 게임 프로젝트
 - px 단위가 아니라 2차원 array의 좌표 단위로 객체를 draw함
 - player의 움직임을 px 단위가 아니라 array의 index 단위로 움직이게 함
 키를 한 번 누르면 오로지 한 칸만 움직임
+
+<b>4/6</b>
+- player position update 후 map에서 player와의 collision detection을 구현하도록 재구조화 
+- map에 hole을 추가하고 box가 hole에 들어가면 고정되도록 함 
+- player가 space key를 누르면 box를 꺼내는 기능 구현 
+- 문제 혹은 힌트를 출력하는 영역인 hint-board 추가 
