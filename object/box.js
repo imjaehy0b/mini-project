@@ -1,37 +1,34 @@
 export default 
 class Box {
+    #img
+    #x
+    #y
     #width
     #height
-    #position
-    #img
-    #key
     #inHole
+    #key
     constructor(x, y, key) {
-        this.#img = document.getElementById("box");
-        
+        this.#img = document.getElementById("box");  
+        this.#x = x;
+        this.#y = y;
         this.#width = 64;
         this.#height = 64;
-
-        this.#inHole = false;
-        this.#position = {
-            x: x,
-            y: y,
-        }
-        
+        this.#inHole = false;  
         this.#key = key;
     }
 
     draw(ctx) {
-        let x = this.#position.x;
-        let y = this.#position.y;
+        let img = this.#img;
+        let x = this.#x;
+        let y = this.#y;
         let width = this.#width;
         let height = this.#height;
-        ctx.drawImage(this.#img, x, y, width, height);
+        ctx.drawImage(img, x*width, y*height, width, height);
     }
 
     setPosition(x, y) {
-        this.#position.x = x;
-        this.#position.y = y;
+        this.#x = x;
+        this.#y = y;
     }
 
     get inHole() {

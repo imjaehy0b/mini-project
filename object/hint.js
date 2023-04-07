@@ -16,11 +16,13 @@ class Hint {
     draw(ctx) {
         let x = this.#x;
         let y = this.#y;
+        let textArr = this.#textArr;
+        let textStyle = this.#textStyle;
         let lineHeight = this.#lineHeight;
 
-        for (let i in this.#textArr) {
-            ctx.font = this.#textStyle;
-            ctx.fillText(this.#textArr[i], x, y+i*lineHeight);
+        for (let i in textArr) {
+            ctx.font = textStyle;
+            ctx.fillText(textArr[i], x, y+i*lineHeight);
         }
     }
 }

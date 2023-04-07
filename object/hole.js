@@ -1,39 +1,36 @@
 export default 
 class Hole {
+    #img
     #width
     #height
-    #position
-    #img
+    #x
+    #y
     #wordKey
     #wordValue
     constructor(x, y, {key, value}) {
         this.#img = document.getElementById("hole");
-        
+        this.#x = x;
+        this.#y = y;
         this.#width = 64;
         this.#height = 64;
-
-        this.#position = {
-            x: x,
-            y: y,
-        }
-        
         this.#wordKey = key;
         this.#wordValue = value;
     }
 
     draw(ctx) {
-        let x = this.#position.x;
-        let y = this.#position.y;
+        let img = this.#img;
+        let x = this.#x;
+        let y = this.#y;
         let width = this.#width;
         let height = this.#height;
-        ctx.drawImage(this.#img, x, y, width, height);
+        ctx.drawImage(img, x*width, y*height, width, height);
     }
 
-    get positionX() {
-        return this.#position.x;
+    get x() {
+        return this.#x;
     }
 
-    get positionY() {
-        return this.#position.y;
+    get y() {
+        return this.#y;
     }
 }

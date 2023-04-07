@@ -34,6 +34,7 @@ class GameCanvas {
     }
 
     keyDownHandler(e) {
+        // player의 상하좌우 움직임과 hole에 빠진 box를 꺼내는 동작 구현 
         switch (e.key) {
             case "w":
                 this.#player.move("up");
@@ -48,24 +49,30 @@ class GameCanvas {
                 this.#player.move("right");
                 break;
             case " ":
-                let existHoleDirection = this.#map.checkBoxInHoleAround(this.#player);
-                let existObstacleDirection = this.#map.checkObstacles(this.#player);
-                let playerInHole = this.#map.checkPlayerInHole(this.#player);
+                let existBoxInHoleDirection = this.#map.checkBoxInHoleAround(this.#player);
+                let existObstacleDirection = this.#map.checkObstaclesAround(this.#player);
+                let playerInHole = this.#map.isInHole(this.#player);
 
+                // player의 현재 위치가 hole이면 종료 
                 if (playerInHole) {
                     return;
                 }
-                if (existHoleDirection.upperSide && !existObstacleDirection.underSide) {
-                    this.#map.takeOutBoxFromHole("up", this.#player);
+
+                // player의 근처에 hole에 들어간 box가 존재하고 반대 방향에 obstacle(wall, box)이 없을 때 
+                // box를 hole에서 꺼내는 동작 수행 
+                let x = this.#player.x;
+                let y = this.#player.y;
+                if (existBoxInHoleDirection.upperSide && !existObstacleDirection.underSide) {
+                    this.#map.takeOutBoxFromHole("up", x, y);
                     this.#player.move("down");
-                } else if (existHoleDirection.underSide && !existObstacleDirection.upperSide) {
-                    this.#map.takeOutBoxFromHole("down", this.#player);
+                } else if (existBoxInHoleDirection.underSide && !existObstacleDirection.upperSide) {
+                    this.#map.takeOutBoxFromHole("down", x, y);
                     this.#player.move("up");
-                } else if (existHoleDirection.leftSide && !existObstacleDirection.rightSide) {
-                    this.#map.takeOutBoxFromHole("left", this.#player);
+                } else if (existBoxInHoleDirection.leftSide && !existObstacleDirection.rightSide) {
+                    this.#map.takeOutBoxFromHole("left", x, y);
                     this.#player.move("right");
-                } else if (existHoleDirection.rightSide && !existObstacleDirection.leftSide) {
-                    this.#map.takeOutBoxFromHole("right", this.#player);
+                } else if (existBoxInHoleDirection.rightSide && !existObstacleDirection.leftSide) {
+                    this.#map.takeOutBoxFromHole("right", x, y);
                     this.#player.move("left");
                 }
                 
@@ -74,8 +81,9 @@ class GameCanvas {
     }
 
     keyUpHandler() {
+        // player의 direction을 전부 초기화하고 0으로 초기화 됐던 step을 1로 만들어 다시 player가 움직일 수 있게 함 
         this.#player.resetDirection();
-        this.#player.setVelocity();
+        this.#player.setStep();
     }
 
     paint() {
@@ -86,6 +94,7 @@ class GameCanvas {
     }
 
     update() {
+        // player의 위치 update 후 map에 존재하는 객체들과 충돌 검사 
         this.#player.update();   
         this.#map.checkCollisionWith(this.#player);
     }
