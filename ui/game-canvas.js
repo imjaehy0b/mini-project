@@ -50,7 +50,11 @@ class GameCanvas {
             case " ":
                 let existHoleDirection = this.#map.checkBoxInHoleAround(this.#player);
                 let existObstacleDirection = this.#map.checkObstacles(this.#player);
+                let playerInHole = this.#map.checkPlayerInHole(this.#player);
 
+                if (playerInHole) {
+                    return;
+                }
                 if (existHoleDirection.upperSide && !existObstacleDirection.underSide) {
                     this.#map.takeOutBoxFromHole("up", this.#player);
                     this.#player.move("down");
@@ -75,20 +79,21 @@ class GameCanvas {
     }
 
     paint() {
-        console.log("paint");
         this.#map.draw(this.#ctx);
         this.#player.draw(this.#ctx);
         this.#hintBoard.draw(this.#ctx);
         this.#hint.draw(this.#ctx);
     }
 
-    run() {
-        requestAnimationFrame(this.run.bind(this));
-        console.log("run");
-        
+    update() {
         this.#player.update();   
         this.#map.checkCollisionWith(this.#player);
-    
+    }
+
+    run() {
+        requestAnimationFrame(this.run.bind(this));
+        
+        this.update();
         this.paint();
     }
 }

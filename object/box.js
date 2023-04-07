@@ -4,18 +4,21 @@ class Box {
     #height
     #position
     #img
-    
-    constructor(x, y) {
+    #key
+    #inHole
+    constructor(x, y, key) {
         this.#img = document.getElementById("box");
         
         this.#width = 64;
         this.#height = 64;
 
+        this.#inHole = false;
         this.#position = {
             x: x,
             y: y,
         }
         
+        this.#key = key;
     }
 
     draw(ctx) {
@@ -25,4 +28,19 @@ class Box {
         let height = this.#height;
         ctx.drawImage(this.#img, x, y, width, height);
     }
+
+    setPosition(x, y) {
+        this.#position.x = x;
+        this.#position.y = y;
+    }
+
+    get inHole() {
+        return this.#inHole;
+    }
+
+    set inHole(bool) {
+        this.#inHole = bool;
+    }  
+
+    
 }

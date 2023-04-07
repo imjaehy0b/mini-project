@@ -4,8 +4,9 @@ class Hole {
     #height
     #position
     #img
-    
-    constructor(x, y) {
+    #wordKey
+    #wordValue
+    constructor(x, y, {key, value}) {
         this.#img = document.getElementById("hole");
         
         this.#width = 64;
@@ -16,6 +17,8 @@ class Hole {
             y: y,
         }
         
+        this.#wordKey = key;
+        this.#wordValue = value;
     }
 
     draw(ctx) {
@@ -24,5 +27,13 @@ class Hole {
         let width = this.#width;
         let height = this.#height;
         ctx.drawImage(this.#img, x, y, width, height);
+    }
+
+    get positionX() {
+        return this.#position.x;
+    }
+
+    get positionY() {
+        return this.#position.y;
     }
 }
