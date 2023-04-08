@@ -1,5 +1,5 @@
-export default 
-class Wall {
+export default
+    class Wall {
     #img
     #x
     #y
@@ -19,6 +19,6 @@ class Wall {
         let y = this.#y;
         let width = this.#width;
         let height = this.#height;
-        ctx.drawImage(img, x*width, y*height, width, height);
+        ctx.drawImage(img, x * width, y * height, width, height);
     }
 }

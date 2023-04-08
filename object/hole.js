@@ -1,5 +1,5 @@
-export default 
-class Hole {
+export default
+    class Hole {
     #img
     #width
     #height
@@ -23,7 +23,10 @@ class Hole {
         let y = this.#y;
         let width = this.#width;
         let height = this.#height;
-        ctx.drawImage(img, x*width, y*height, width, height);
+        ctx.drawImage(img, x * width, y * height, width, height);
+        ctx.fillStyle = "white";
+        ctx.textAlign = "center";
+        ctx.fillText(this.#wordKey, x*width + width/2, y*height + height/2);
     }
 
     get x() {

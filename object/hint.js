@@ -1,5 +1,5 @@
 export default
-class Hint {
+    class Hint {
     #x
     #y
     #textArr
@@ -19,10 +19,11 @@ class Hint {
         let textArr = this.#textArr;
         let textStyle = this.#textStyle;
         let lineHeight = this.#lineHeight;
-
+        ctx.fillStyle = "black";
+        ctx.textAlign = "left";
         for (let i in textArr) {
             ctx.font = textStyle;
-            ctx.fillText(textArr[i], x, y+i*lineHeight);
+            ctx.fillText(textArr[i], x, y + i * lineHeight);
         }
     }
 }

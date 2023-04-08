@@ -1,11 +1,11 @@
-export default 
-class HintBoard {
+export default
+    class HintBoard {
     #img
     #x
     #y
     #width
     #height
-    constructor(x=512, y=0) {
+    constructor(x = 512, y = 0) {
         this.#img = document.getElementById("hintWall");
         this.#x = x;
         this.#y = y;

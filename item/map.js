@@ -28,16 +28,18 @@ export default
 
         this.#boxWord = ["entity", "object"];
         this.#holeWord = [
-            { key: "개체",
-              value: "entity", 
+            {
+                key: "개체",
+                value: "entity",
             },
-            { key: "객체",
-              value: "object", 
+            {
+                key: "객체",
+                value: "object",
             }
         ];
 
         this.#holeArray = [];
-        this.#boxArray = []; 
+        this.#boxArray = [];
         this.#mapBlocks = this.#map2d.make2dBlockArray(this.#boxWord, this.#holeWord, this.#holeArray, this.#boxArray);
     }
 
@@ -58,7 +60,7 @@ export default
                 || (!hasObstacle.underSide && direction.down)
                 || (!hasObstacle.leftSide && direction.left)
                 || (!hasObstacle.rightSide && direction.right);
-            
+
             if (canBeMoved) {
                 this.changeBoxPosition(x, y, direction);
             } else {
@@ -77,54 +79,54 @@ export default
 
         if (direction.up) {
             let box = this.#mapBlocks[y][x];
-            let upperBlock = this.#mapBlocks[y-1][x];
+            let upperBlock = this.#mapBlocks[y - 1][x];
 
             if (upperBlock instanceof Hole) {
                 box.inHole = true;
             }
 
             // mapBlocks에서 box의 위치를 한 칸 위로 옮기고 그 자리를 타일로 대체
-            box.setPosition(x, y-1); 
-            this.#mapBlocks[y-1][x] = box;
+            box.setPosition(x, y - 1);
+            this.#mapBlocks[y - 1][x] = box;
             this.#mapBlocks[y][x] = new Tile(x, y);
 
         } else if (direction.down) {
             let box = this.#mapBlocks[y][x];
-            let underBlock = this.#mapBlocks[y+1][x];
+            let underBlock = this.#mapBlocks[y + 1][x];
 
             if (underBlock instanceof Hole) {
                 box.inHole = true;
-           }
+            }
 
             // mapBlocks에서 box의 위치를 한 칸 밑으로 옮기고 그 자리를 타일로 대체 
-            box.setPosition(x, y+1);
-            this.#mapBlocks[y+1][x] = box;
+            box.setPosition(x, y + 1);
+            this.#mapBlocks[y + 1][x] = box;
             this.#mapBlocks[y][x] = new Tile(x, y);
 
         } else if (direction.left) {
             let box = this.#mapBlocks[y][x];
-            let leftBlock = this.#mapBlocks[y][x-1];
-            
+            let leftBlock = this.#mapBlocks[y][x - 1];
+
             if (leftBlock instanceof Hole) {
                 box.inHole = true;
-            } 
-            
+            }
+
             // mapBlocks에서 box의 위치를 한 칸 왼쪽으로 옮기고 그 자리를 타일로 대체 
-            box.setPosition(x-1, y);
-            this.#mapBlocks[y][x-1] = box;
+            box.setPosition(x - 1, y);
+            this.#mapBlocks[y][x - 1] = box;
             this.#mapBlocks[y][x] = new Tile(x, y);
 
         } else if (direction.right) {
             let box = this.#mapBlocks[y][x];
-            let rightBlock = this.#mapBlocks[y][x+1];
+            let rightBlock = this.#mapBlocks[y][x + 1];
 
             if (rightBlock instanceof Hole) {
                 box.inHole = true;
-            } 
+            }
 
             // mapBlocks에서 box의 위치를 한 칸 왼쪽으로 옮기고 그 자리를 타일로 대체
-            box.setPosition(x+1, y);
-            this.#mapBlocks[y][x+1] = box;
+            box.setPosition(x + 1, y);
+            this.#mapBlocks[y][x + 1] = box;
             this.#mapBlocks[y][x] = new Tile(x, y);
         }
     }
@@ -134,24 +136,24 @@ export default
         let y = player.y;
 
         let result = {
-            upperSide: (this.#mapBlocks[y-1][x] instanceof Wall || this.#mapBlocks[y-1][x] instanceof Box) ? true : false,
-            underSide: (this.#mapBlocks[y+1][x] instanceof Wall || this.#mapBlocks[y+1][x] instanceof Box) ? true : false,
-            leftSide: (this.#mapBlocks[y][x-1] instanceof Wall || this.#mapBlocks[y][x-1] instanceof Box) ? true : false,
-            rightSide: (this.#mapBlocks[y][x+1] instanceof Wall || this.#mapBlocks[y][x+1] instanceof Box) ? true : false,
+            upperSide: (this.#mapBlocks[y - 1][x] instanceof Wall || this.#mapBlocks[y - 1][x] instanceof Box) ? true : false,
+            underSide: (this.#mapBlocks[y + 1][x] instanceof Wall || this.#mapBlocks[y + 1][x] instanceof Box) ? true : false,
+            leftSide: (this.#mapBlocks[y][x - 1] instanceof Wall || this.#mapBlocks[y][x - 1] instanceof Box) ? true : false,
+            rightSide: (this.#mapBlocks[y][x + 1] instanceof Wall || this.#mapBlocks[y][x + 1] instanceof Box) ? true : false,
         }
 
         return result;
     }
-    
+
     checkBoxInHoleAround(player) {
         let x = player.x;
         let y = player.y;
 
         let result = {
-            upperSide: (this.#mapBlocks[y-1][x] instanceof Box && this.#mapBlocks[y-1][x].inHole) ? true : false,
-            underSide: (this.#mapBlocks[y+1][x] instanceof Box && this.#mapBlocks[y+1][x].inHole) ? true : false,
-            leftSide: (this.#mapBlocks[y][x-1] instanceof Box && this.#mapBlocks[y][x-1].inHole) ? true : false,
-            rightSide: (this.#mapBlocks[y][x+1] instanceof Box && this.#mapBlocks[y][x+1].inHole) ? true : false,
+            upperSide: (this.#mapBlocks[y - 1][x] instanceof Box && this.#mapBlocks[y - 1][x].inHole) ? true : false,
+            underSide: (this.#mapBlocks[y + 1][x] instanceof Box && this.#mapBlocks[y + 1][x].inHole) ? true : false,
+            leftSide: (this.#mapBlocks[y][x - 1] instanceof Box && this.#mapBlocks[y][x - 1].inHole) ? true : false,
+            rightSide: (this.#mapBlocks[y][x + 1] instanceof Box && this.#mapBlocks[y][x + 1].inHole) ? true : false,
         }
 
         return result;
@@ -163,12 +165,12 @@ export default
 
         if (this.#mapBlocks[y][x] instanceof Hole) {
             return true;
-        } 
+        }
 
         return false;
     }
 
-    takeOutBoxFromHole(existDirection, x, y) { 
+    takeOutBoxFromHole(existDirection, x, y) {
         let block = this.#mapBlocks[y][x];
         if (block instanceof Hole) {
             return;
@@ -177,54 +179,54 @@ export default
         let box;
         switch (existDirection) {
             case "up":
-                box = this.#mapBlocks[y-1][x];
+                box = this.#mapBlocks[y - 1][x];
                 box.setPosition(x, y);
                 box.inHole = false;
                 this.#mapBlocks[y][x] = box;
 
                 for (let hole of this.#holeArray) {
-                    if (hole.x == x && hole.y == y-1) {
-                        this.#mapBlocks[y-1][x] = hole;
+                    if (hole.x == x && hole.y == y - 1) {
+                        this.#mapBlocks[y - 1][x] = hole;
                     }
                 }
 
                 break;
             case "down":
-                box = this.#mapBlocks[y+1][x];
+                box = this.#mapBlocks[y + 1][x];
                 box.setPosition(x, y);
                 box.inHole = false;
                 this.#mapBlocks[y][x] = box;
 
                 // of 로 수정 in, of의 차이 알아내기
                 for (let hole of this.#holeArray) {
-                    if (hole.x == x && hole.y == y+1) {
-                        this.#mapBlocks[y+1][x] = hole;
+                    if (hole.x == x && hole.y == y + 1) {
+                        this.#mapBlocks[y + 1][x] = hole;
                     }
                 }
 
                 break;
             case "left":
-                box = this.#mapBlocks[y][x-1];
+                box = this.#mapBlocks[y][x - 1];
                 box.setPosition(x, y);
                 box.inHole = false;
                 this.#mapBlocks[y][x] = box;
 
                 for (let hole of this.#holeArray) {
-                    if (hole.x == x-1 && hole.y == y) {
-                        this.#mapBlocks[y][x-1] = hole;
+                    if (hole.x == x - 1 && hole.y == y) {
+                        this.#mapBlocks[y][x - 1] = hole;
                     }
                 }
 
                 break;
             case "right":
-                box = this.#mapBlocks[y][x+1];
+                box = this.#mapBlocks[y][x + 1];
                 box.setPosition(x, y);
                 box.inHole = false;
                 this.#mapBlocks[y][x] = box;
 
                 for (let hole of this.#holeArray) {
-                    if (hole.x == x+1 && hole.y == y) {
-                        this.#mapBlocks[y][x+1] = hole;
+                    if (hole.x == x + 1 && hole.y == y) {
+                        this.#mapBlocks[y][x + 1] = hole;
                     }
                 }
 

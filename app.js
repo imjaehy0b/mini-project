@@ -1,6 +1,6 @@
 import GameCanvas from "./ui/game-canvas.js";
 
-window.onload = function() {
+window.onload = function () {
     const gameCanvas = new GameCanvas();
     gameCanvas.run();
 }

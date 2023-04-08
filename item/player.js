@@ -1,13 +1,12 @@
-export default 
-class Player {
+export default
+    class Player {
     #img
     #x
     #y
     #width
     #height
     #step
-    #direction 
-    #isMovable
+    #direction
     constructor() {
         this.#img = document.getElementById("player");
         this.#x = 3;
@@ -15,13 +14,12 @@ class Player {
         this.#width = 64;
         this.#height = 64;
         this.#step = 1;
-        this.#isMovable = true;
-        
+
         this.#direction = {
             up: false,
             down: false,
             left: false,
-            right: false, 
+            right: false,
         };
     }
 
@@ -60,19 +58,19 @@ class Player {
         }
     }
 
-    draw(ctx) { 
+    draw(ctx) {
         let img = this.#img;
         let x = this.#x;
         let y = this.#y;
         let width = this.#width;
         let height = this.#height;
-        ctx.drawImage(img, x*width, y*height, width, height);    
+        ctx.drawImage(img, x * width, y * height, width, height);
     }
 
     setStep() {
         this.#step = 1;
     }
-    
+
     setDirection(direction) {
         switch (direction) {
             case "up":
@@ -90,10 +88,6 @@ class Player {
         }
     }
 
-    setImmovable() {
-        this.#isMovable = false;
-    }
-
     resetDirection() {
         this.#direction.up = false;
         this.#direction.down = false;
@@ -109,10 +103,6 @@ class Player {
         else if (this.#direction.right) this.#x -= 1;
     }
 
-    get isMovable() {
-        return this.#isMovable;
-    }
-
     get x() {
         return this.#x;
     }
@@ -120,7 +110,7 @@ class Player {
     get y() {
         return this.#y;
     }
-   
+
     get direction() {
         return this.#direction;
     }

@@ -1,5 +1,5 @@
-export default 
-class Tile {
+export default
+    class Tile {
     #img
     #x
     #y
@@ -8,7 +8,7 @@ class Tile {
     constructor(x, y) {
         this.#img = document.getElementById("tile");
         this.#x = x;
-        this.#y = y; 
+        this.#y = y;
         this.#width = 64;
         this.#height = 64;
     }
@@ -19,6 +19,6 @@ class Tile {
         let y = this.#y;
         let width = this.#width;
         let height = this.#height;
-        ctx.drawImage(img, x*width, y*height, width, height);
+        ctx.drawImage(img, x * width, y * height, width, height);
     }
 }

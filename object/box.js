@@ -1,5 +1,5 @@
-export default 
-class Box {
+export default
+    class Box {
     #img
     #x
     #y
@@ -8,12 +8,12 @@ class Box {
     #inHole
     #word
     constructor(x, y, word) {
-        this.#img = document.getElementById("box");  
+        this.#img = document.getElementById("box");
         this.#x = x;
         this.#y = y;
         this.#width = 64;
         this.#height = 64;
-        this.#inHole = false;  
+        this.#inHole = false;
         this.#word = word;
     }
 
@@ -23,7 +23,10 @@ class Box {
         let y = this.#y;
         let width = this.#width;
         let height = this.#height;
-        ctx.drawImage(img, x*width, y*height, width, height);
+        ctx.drawImage(img, x * width, y * height, width, height);
+        ctx.fillStyle = "black";
+        ctx.textAlign = "center";
+        ctx.fillText(this.#word, x * width + width/2, y * height + height/2);
     }
 
     setPosition(x, y) {
@@ -38,7 +41,7 @@ class Box {
     get y() {
         return this.#y;
     }
-    
+
     get word() {
         return this.#word;
     }
@@ -49,7 +52,5 @@ class Box {
 
     set inHole(bool) {
         this.#inHole = bool;
-    }  
-
-    
+    }
 }
