@@ -79,7 +79,6 @@ export default
             let upperBlock = this.#mapBlocks[y-1][x];
 
             if (upperBlock instanceof Hole) {
-                this.#boxArray.push(box);
                 box.inHole = true;
             }
 
@@ -93,7 +92,6 @@ export default
             let underBlock = this.#mapBlocks[y+1][x];
 
             if (underBlock instanceof Hole) {
-                this.#boxArray.push(box);
                 box.inHole = true;
            }
 
@@ -107,7 +105,6 @@ export default
             let leftBlock = this.#mapBlocks[y][x-1];
             
             if (leftBlock instanceof Hole) {
-                this.#boxArray.push(box);
                 box.inHole = true;
             } 
             
@@ -121,7 +118,6 @@ export default
             let rightBlock = this.#mapBlocks[y][x+1];
 
             if (rightBlock instanceof Hole) {
-                this.#boxArray.push(box);
                 box.inHole = true;
             } 
 
@@ -271,7 +267,7 @@ Array.prototype.parse2d = function () {
     return array2d;
 }
 
-Array.prototype.make2dBlockArray = function (boxWord, holeWord) {
+Array.prototype.make2dBlockArray = function (boxWord, holeWord, holeArr) {
     let arr2d = [];
     let boxWordIndex = 0;
     let holeWordIndex = 0;
@@ -295,7 +291,7 @@ Array.prototype.make2dBlockArray = function (boxWord, holeWord) {
                 case 3:
                     let hole = new Hole(x, y, holeWord[holeWordIndex++]);
                     arr1d.push(hole);
-                    // holeArr.push(hole);
+                    holeArr.push(hole);
                     break;
             }
         })
