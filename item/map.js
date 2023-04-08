@@ -11,6 +11,7 @@ export default
     #boxWord
     #holeWord
     #holeArray
+    #boxArray
     constructor() {
         this.#map1d = [
             1, 1, 1, 1, 1, 1, 1, 1,
@@ -27,15 +28,19 @@ export default
 
         this.#boxWord = ["entity", "object"];
         this.#holeWord = [
-            { "개체": "entity" },
-            { "객체": "object" },
+            { key: "개체",
+              value: "entity", 
+            },
+            { key: "객체",
+              value: "object", 
+            }
         ];
-
-        this.#mapBlocks = this.#map2d.make2dBlockArray(this.#boxWord, this.#holeWord);
-        this.#holeArray = []; // 박스가 구멍에 들어가면 구멍이 들어가 있을 배열 
+        this.#holeArray = [];
+        this.#mapBlocks = this.#map2d.make2dBlockArray(this.#boxWord, this.#holeWord, this.#holeArray);
+        this.#boxArray = []; // 박스가 구멍에 들어가면 구멍이 들어가 있을 배열 
     }
 
-    checkCollisionWith(player) {
+    detectCollisionWith(player) {
         let x = player.x;
         let y = player.y;
         let direction = player.direction;
@@ -74,8 +79,7 @@ export default
             let upperBlock = this.#mapBlocks[y-1][x];
 
             if (upperBlock instanceof Hole) {
-                // hole 객체를 배열에 저장 
-                this.#holeArray.push(upperBlock);
+                this.#boxArray.push(box);
                 box.inHole = true;
             }
 
@@ -89,8 +93,7 @@ export default
             let underBlock = this.#mapBlocks[y+1][x];
 
             if (underBlock instanceof Hole) {
-                // hole 객체를 배열에 저장 
-                this.#holeArray.push(underBlock);
+                this.#boxArray.push(box);
                 box.inHole = true;
            }
 
@@ -104,8 +107,7 @@ export default
             let leftBlock = this.#mapBlocks[y][x-1];
             
             if (leftBlock instanceof Hole) {
-                // hole 객체를 배열에 저장 
-                this.#holeArray.push(leftBlock);
+                this.#boxArray.push(box);
                 box.inHole = true;
             } 
             
@@ -119,8 +121,7 @@ export default
             let rightBlock = this.#mapBlocks[y][x+1];
 
             if (rightBlock instanceof Hole) {
-                // hole 객체를 배열에 저장 
-                this.#holeArray.push(rightBlock);
+                this.#boxArray.push(box);
                 box.inHole = true;
             } 
 
@@ -234,6 +235,19 @@ export default
         }
     }
 
+    checkAnswer() {
+        for (let box of this.#boxArray) {
+            for (let hole of this.#holeArray) {
+                if (hole.x == box.x && hole.y == box.y) {
+                    if (box.key == hole.wordValue) {
+
+                    }
+                }
+
+            }
+        }
+    }
+
     draw(ctx) {
         this.#mapBlocks.forEach((blocks) => {
             blocks.forEach((block) => {
@@ -274,10 +288,14 @@ Array.prototype.make2dBlockArray = function (boxWord, holeWord) {
                     arr1d.push(new Wall(x, y));
                     break;
                 case 2:
-                    arr1d.push(new Box(x, y, boxWord[boxWordIndex++]));
+                    let box = new Box(x, y, boxWord[boxWordIndex++]);
+                    arr1d.push(box);
+                    // boxArr.push(box);
                     break;
                 case 3:
-                    arr1d.push(new Hole(x, y, holeWord[holeWordIndex++]));
+                    let hole = new Hole(x, y, holeWord[holeWordIndex++]);
+                    arr1d.push(hole);
+                    // holeArr.push(hole);
                     break;
             }
         })

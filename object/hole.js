@@ -7,14 +7,15 @@ class Hole {
     #y
     #wordKey
     #wordValue
-    constructor(x, y, {key, value}) {
+    constructor(x, y, obj) {
         this.#img = document.getElementById("hole");
         this.#x = x;
         this.#y = y;
-        this.#width = 64;
+        this.#width = 64
         this.#height = 64;
-        this.#wordKey = key;
-        this.#wordValue = value;
+        this.#wordKey = obj.key;
+        this.#wordValue = obj.value;
+        console.log(this.#wordKey, this.#wordValue);
     }
 
     draw(ctx) {

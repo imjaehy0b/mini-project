@@ -6,15 +6,15 @@ class Box {
     #width
     #height
     #inHole
-    #key
-    constructor(x, y, key) {
+    #word
+    constructor(x, y, word) {
         this.#img = document.getElementById("box");  
         this.#x = x;
         this.#y = y;
         this.#width = 64;
         this.#height = 64;
         this.#inHole = false;  
-        this.#key = key;
+        this.#word = word;
     }
 
     draw(ctx) {

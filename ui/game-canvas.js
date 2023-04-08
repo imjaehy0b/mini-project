@@ -96,7 +96,8 @@ class GameCanvas {
     update() {
         // player의 위치 update 후 map에 존재하는 객체들과 충돌 검사 
         this.#player.update();   
-        this.#map.checkCollisionWith(this.#player);
+        this.#map.detectCollisionWith(this.#player);
+        this.#map.checkAnswer();
     }
 
     run() {
