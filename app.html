@@ -1,19 +1,40 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>newlec ipsum</title>
-    <script type="module" src="app.js" defer></script> 
-    <link rel="stylesheet" href="css/style.css">
-</head>
-<body>
-    <img id="player" src="./images/player.png" class="display-none">
-    <img id="wall" src="./images/wall_64.png" class="display-none">
-    <img id="tile" src="./images/tile_64.png" class="display-none">
-    <img id="box" src="./images/box.png" class="display-none">
-    <img id="hole" src="./images/hole.png" class="display-none">
-    <img id="hintWall" src="./images/hintWall.png" class="display-none">
-</body>
+    <script type="module" src="app.js" defer></script>
+    <!-- <script type="module" src="countdown.js" defer></script> -->
+    <link rel="stylesheet" href="css/style.css" />
+  </head>
+  <body>
+    <audio
+      src="./audio/mixkit-arcade-retro-background-219.wav"
+      id="inGameAudio"
+      autoplay
+      loop
+    ></audio>
+    <img id="player" src="./images/player.png" class="display-none" />
+    <img id="wall" src="./images/wall_64.png" class="display-none" />
+    <img id="tile" src="./images/tile_64.png" class="display-none" />
+    <img id="box" src="./images/box.png" class="display-none" />
+    <img id="hole" src="./images/hole.png" class="display-none" />
+    <img id="hintWall" src="./images/hintWall.png" class="display-none" />
+
+    <div id="ProgressBar">
+      <div id="timer">60</div>
+    </div>
+
+    <!-- style="
+    background-color: red;
+    width: 100px;
+    height: 100px;
+    flex-shrink: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  " -->
+  </body>
 </html>
