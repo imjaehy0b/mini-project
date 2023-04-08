@@ -1,8 +1,36 @@
 body {
-    margin: 0;
-    background-color: black;
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  background-color: white;
 }
 
 .display-none {
-    display: none;
+  display: none;
 }
+
+#ProgressBar {
+  width: 765px;
+  margin: 0px;
+  height: 30px;
+  background-color: #0a5f44;
+}
+#ProgressBar div {
+  height: 100%;
+  text-align: right;
+  padding: 0 10px;
+  line-height: 22px;
+  background-color: #cbea00;
+  box-sizing: border-box;
+}
+
+/* #myProgress {
+  width: 768px;
+  background-color: #ddd;
+}
+
+#myBar {
+  width: 768px;
+  height: 30px;
+  background-color: #4caf50;
+} */
