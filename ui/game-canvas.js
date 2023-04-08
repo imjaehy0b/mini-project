@@ -35,6 +35,10 @@ class GameCanvas {
 
     keyDownHandler(e) {
         // player의 상하좌우 움직임과 hole에 빠진 box를 꺼내는 동작 구현 
+        if (!this.#player.isMovable) {
+            return;
+        }
+
         switch (e.key) {
             case "w":
                 this.#player.move("up");
@@ -86,6 +90,13 @@ class GameCanvas {
         this.#player.setStep();
     }
 
+    update() {
+        // player의 위치 update 후 map에 존재하는 객체들과 충돌 검사
+        // 이후 정답 검사 
+        this.#player.update();   
+        this.#map.detectCollisionWith(this.#player);
+    }
+
     paint() {
         this.#map.draw(this.#ctx);
         this.#player.draw(this.#ctx);
@@ -93,17 +104,26 @@ class GameCanvas {
         this.#hint.draw(this.#ctx);
     }
 
-    update() {
-        // player의 위치 update 후 map에 존재하는 객체들과 충돌 검사 
-        this.#player.update();   
-        this.#map.detectCollisionWith(this.#player);
-        this.#map.checkAnswer();
+    checkClear() {
+        let allCorrect = this.#map.checkAnswer();
+        if (allCorrect) {
+            this.#player.setImmovable();
+            return true;
+        }
     }
 
     run() {
-        requestAnimationFrame(this.run.bind(this));
-        
         this.update();
         this.paint();
+
+        let isClear = this.checkClear();
+        if (isClear) {
+            console.log("123");
+            return;
+        }
+        requestAnimationFrame(this.run.bind(this));
+        // requestAnimationFrame이 블록 최상단에 있을 때랑 최하단에 있을 때 차이 발생
+        // 최상단에 있을 때는 return의 영향을 받지 않고 123이 계속 출력 되고
+        // 최하단에 있을 때는 생각한 대로 123이 한 번만 출력 되고 동작 종료
     }
 }

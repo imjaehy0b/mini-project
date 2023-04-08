@@ -31,6 +31,18 @@ class Box {
         this.#y = y;
     }
 
+    get x() {
+        return this.#x;
+    }
+
+    get y() {
+        return this.#y;
+    }
+    
+    get word() {
+        return this.#word;
+    }
+
     get inHole() {
         return this.#inHole;
     }

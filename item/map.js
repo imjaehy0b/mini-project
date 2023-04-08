@@ -35,9 +35,10 @@ export default
               value: "object", 
             }
         ];
+
         this.#holeArray = [];
-        this.#mapBlocks = this.#map2d.make2dBlockArray(this.#boxWord, this.#holeWord, this.#holeArray);
-        this.#boxArray = []; // 박스가 구멍에 들어가면 구멍이 들어가 있을 배열 
+        this.#boxArray = []; 
+        this.#mapBlocks = this.#map2d.make2dBlockArray(this.#boxWord, this.#holeWord, this.#holeArray, this.#boxArray);
     }
 
     detectCollisionWith(player) {
@@ -232,16 +233,25 @@ export default
     }
 
     checkAnswer() {
+        let answerNum = 0;
+
         for (let box of this.#boxArray) {
             for (let hole of this.#holeArray) {
                 if (hole.x == box.x && hole.y == box.y) {
-                    if (box.key == hole.wordValue) {
+                    let isSame = (box.word == hole.wordValue) ? true : false;
 
+                    if (isSame) {
+                        answerNum++;
+                        break;
                     }
                 }
-
             }
         }
+
+        if (answerNum == this.#holeArray.length) {
+            return true;
+        }
+        return false;
     }
 
     draw(ctx) {
@@ -267,7 +277,7 @@ Array.prototype.parse2d = function () {
     return array2d;
 }
 
-Array.prototype.make2dBlockArray = function (boxWord, holeWord, holeArr) {
+Array.prototype.make2dBlockArray = function (boxWord, holeWord, holeArr, boxArr) {
     let arr2d = [];
     let boxWordIndex = 0;
     let holeWordIndex = 0;
@@ -286,7 +296,7 @@ Array.prototype.make2dBlockArray = function (boxWord, holeWord, holeArr) {
                 case 2:
                     let box = new Box(x, y, boxWord[boxWordIndex++]);
                     arr1d.push(box);
-                    // boxArr.push(box);
+                    boxArr.push(box);
                     break;
                 case 3:
                     let hole = new Hole(x, y, holeWord[holeWordIndex++]);

@@ -7,6 +7,7 @@ class Player {
     #height
     #step
     #direction 
+    #isMovable
     constructor() {
         this.#img = document.getElementById("player");
         this.#x = 3;
@@ -14,6 +15,7 @@ class Player {
         this.#width = 64;
         this.#height = 64;
         this.#step = 1;
+        this.#isMovable = true;
         
         this.#direction = {
             up: false,
@@ -88,6 +90,10 @@ class Player {
         }
     }
 
+    setImmovable() {
+        this.#isMovable = false;
+    }
+
     resetDirection() {
         this.#direction.up = false;
         this.#direction.down = false;
@@ -101,6 +107,10 @@ class Player {
         else if (this.#direction.down) this.#y -= 1;
         else if (this.#direction.left) this.#x += 1;
         else if (this.#direction.right) this.#x -= 1;
+    }
+
+    get isMovable() {
+        return this.#isMovable;
     }
 
     get x() {

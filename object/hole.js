@@ -15,7 +15,6 @@ class Hole {
         this.#height = 64;
         this.#wordKey = obj.key;
         this.#wordValue = obj.value;
-        console.log(this.#wordKey, this.#wordValue);
     }
 
     draw(ctx) {
@@ -33,5 +32,9 @@ class Hole {
 
     get y() {
         return this.#y;
+    }
+
+    get wordValue() {
+        return this.#wordValue;
     }
 }
