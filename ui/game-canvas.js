@@ -6,6 +6,9 @@ import Player from '../item/player.js';
 import HintBoard from '../object/hint-board.js';
 import Hint from '../object/hint.js';
 import SFX from '../object/sfx.js';
+import Layer from '../item/Layer.js';
+import StartBtn from '../item/startBtn.js';
+
 
 const WIDTH = 768;
 const HEIGHT = 512;
@@ -23,6 +26,7 @@ export default class GameCanvas {
 	#hint
 	#timer
 	#sfx
+	#layer
 	constructor() {
 		this.#obj = document.createElement('canvas');
 		this.#obj.tabIndex = 0;
@@ -35,9 +39,12 @@ export default class GameCanvas {
 		this.#ctx = this.#obj.getContext('2d');
 
 		this.#currentScreen = 'titleScreen';
-		this.#title = document.getElementById('titleScreen');
+
 		this.#levelSelection = document.getElementById('levelSelectionScreen');
 		this.#loading = document.getElementById('loadingScreen');
+
+		this.#layer = new Layer()
+		this.startBtn = new StartBtn();
 
 		this.#map = new Map();
 		this.#player = new Player();
@@ -51,11 +58,15 @@ export default class GameCanvas {
 		this.#obj.onkeyup = this.keyUpHandler.bind(this);
 	}
 
+	mouseClick(e) {
+		this.startBtn.buttonClick(e);
+	  }
+
 	drawTitleScreen() {
-		let titleImg = this.#title;
-		let width = this.#obj.width;
-		let height = this.#obj.height;
-		this.#ctx.drawImage(titleImg, 0, 0, width, height);
+		requestAnimationFrame(this.drawTitleScreen.bind(this));
+
+		this.#layer.draw(this.#ctx)
+		this.startBtn.draw(this.#ctx)
 	}
 
 	drawLevelSelectionScreen() {
@@ -68,6 +79,7 @@ export default class GameCanvas {
 	}
 
 	mouseDownHandler(e) {
+		console.log(e.offsetX);
 		switch (this.#currentScreen) {
 			case 'titleScreen': 
 				if (290 <= e.offsetX && e.offsetX <= 475 
