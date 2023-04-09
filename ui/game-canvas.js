@@ -7,40 +7,96 @@ import HintBoard from '../object/hint-board.js';
 import Hint from '../object/hint.js';
 import SFX from '../object/sfx.js';
 
+const WIDTH = 768;
+const HEIGHT = 512;
+
 export default class GameCanvas {
-	#obj;
-	#ctx;
-	#map;
-	#player;
-	#hintBoard;
-	#hint;
-	#timer;
-	#sfx;
+	#obj
+	#ctx
+	#currentScreen
+	#title
+	#levelSelection
+	#loading
+	#map
+	#player
+	#hintBoard
+	#hint
+	#timer
+	#sfx
 	constructor() {
 		this.#obj = document.createElement('canvas');
 		this.#obj.tabIndex = 0;
 		document.body.append(this.#obj);
 		this.#obj.focus();
 
-		this.#obj.width = 768;
-		this.#obj.height = 512;
+		this.#obj.width = WIDTH;
+		this.#obj.height = HEIGHT;
 
 		this.#ctx = this.#obj.getContext('2d');
+
+		this.#currentScreen = 'titleScreen';
+		this.#title = document.getElementById('titleScreen');
+		this.#levelSelection = document.getElementById('levelSelectionScreen');
+		this.#loading = document.getElementById('loadingScreen');
 
 		this.#map = new Map();
 		this.#player = new Player();
 		this.#hintBoard = new HintBoard();
 		this.#hint = new Hint();
 		this.#timer = new Timer();
-		this.#sfx = new SFX();
+		// this.#sfx = new SFX();
 
+		this.#obj.onmousedown = this.mouseDownHandler.bind(this);
 		this.#obj.onkeydown = this.keyDownHandler.bind(this);
 		this.#obj.onkeyup = this.keyUpHandler.bind(this);
 	}
 
+	drawTitleScreen() {
+		let titleImg = this.#title;
+		let width = this.#obj.width;
+		let height = this.#obj.height;
+		this.#ctx.drawImage(titleImg, 0, 0, width, height);
+	}
+
+	drawLevelSelectionScreen() {
+		let img = this.#levelSelection;
+		let width = this.#obj.width;
+		let height = this.#obj.height;
+
+		this.#ctx.clearRect(0, 0, width, height);
+		this.#ctx.drawImage(img, 0, 0, width, height);
+	}
+
+	mouseDownHandler(e) {
+		switch (this.#currentScreen) {
+			case 'titleScreen': 
+				if (290 <= e.offsetX && e.offsetX <= 475 
+					&& 300 <= e.offsetY && e.offsetY <= 335) {
+						this.#currentScreen = 'levelSelectionScreen';
+						setTimeout(() => {
+							this.drawLevelSelectionScreen();
+						}, 700);
+						this.#ctx.drawImage(this.#loading, 0, 0, this.#obj.width, this.#obj.height);
+					}
+					break;
+
+			case 'levelSelectionScreen': 
+				if (120 <= e.offsetX && 
+					  e.offsetX <= 210 && 
+						195 <= e.offsetY && 
+						e.offsetY <= 250) {
+						this.#currentScreen = 'runScreen';
+						setTimeout(() => {
+							this.run();
+						}, 700)
+						this.#ctx.drawImage(this.#loading, 0, 0, this.#obj.width, this.#obj.height);
+					}
+				break;
+		}
+	}
+
 	keyDownHandler(e) {
 		// player의 상하좌우 움직임과 hole에 빠진 box를 꺼내는 동작 구현 
-
 		switch (e.key) {
 			case "r":
 				document.location.reload();
@@ -110,7 +166,7 @@ export default class GameCanvas {
 		// player의 위치 update 후 map에 존재하는 객체들과 충돌 검사
 		// 이후 정답 검사
 		this.#timer.decreaseTime();
-		this.#sfx.play();
+		// this.#sfx.play();
 		this.#player.update();
 		this.#map.detectCollisionWith(this.#player);
 	}
@@ -156,6 +212,7 @@ export default class GameCanvas {
 	}
 
 	run() {
+		this.#ctx.clearRect(0, 0, this.#obj.width, this.#obj.height);
 		this.update();
 		this.paint();
 
@@ -164,6 +221,9 @@ export default class GameCanvas {
 
 		if (isClear) {
 			this.showClearMessage();
+			this.#currentScreen = 'levelSelectionScreen';
+			
+			this.drawLevelSelectionScreen();
 			return;
 		}
 

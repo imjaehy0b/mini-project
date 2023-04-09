@@ -5,10 +5,11 @@ export default
     #y
     #width
     #height
-    constructor(x = 512, y = 0) {
+    // x = 512, y = 0
+    constructor() {
         this.#img = document.getElementById("hintWall");
-        this.#x = x;
-        this.#y = y;
+        this.#x = 512;
+        this.#y = 0;
         this.#width = 256;
         this.#height = 512;
     }

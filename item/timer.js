@@ -1,7 +1,7 @@
 export default class Timer {
   #time
   constructor() {
-    this.#time = 60;
+    this.#time = 3600;
   }
 
   decreaseTime() {
