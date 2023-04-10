@@ -5,10 +5,7 @@ export default class Timer {
   }
 
   decreaseTime() {
-    if (this.#time > 0) {
-      this.#time--;
-      document.querySelector('#timer').innerHTML = Math.floor(this.#time / 60);
-    }
+    this.#time--;
   }
 
   checkTime() {
@@ -17,9 +14,14 @@ export default class Timer {
     }
   }
   
-    // if (this.timer === 0) {
-    //     if () {
-    //         gameover 띄우기
-    //     }
-    // }
+  draw(ctx) {
+    let time = Math.floor(this.#time/60);
+    ctx.beginPath();
+    ctx.arc(32, 32, 25, 0, Math.PI*2);
+    ctx.stroke();
+    ctx.fillStyle = "yellow";
+    ctx.fill();
+    ctx.fillStyle = "black";
+    ctx.fillText(time, 32, 40);
   }
+}

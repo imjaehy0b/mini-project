@@ -2,6 +2,13 @@ import Tile from "../object/tile.js";
 import Wall from "../object/wall.js";
 import Box from "../object/box.js";
 import Hole from "../object/hole.js";
+import WallFront from "../object/wallFront.js";
+import WallLeft from "../object/wallLeft.js";
+import WallRight from "../object/wallRight.js";
+import WallEdgeLeft from "../object/wallEdgeLeft.js";
+import WallEdgeRight from "../object/wallEdgeRight.js";
+import WallUpper from "../object/wallUpper.js";
+import {mapArray, boxWord, holeWord} from "../data.js";
 
 export default
     class Map {
@@ -12,31 +19,13 @@ export default
     #holeWord
     #holeArray
     #boxArray
-    constructor() {
-        this.#map1d = [
-            1, 1, 1, 1, 1, 1, 1, 1,
-            1, 0, 0, 0, 0, 0, 0, 1,
-            1, 0, 0, 0, 0, 0, 0, 1,
-            1, 0, 2, 0, 0, 2, 0, 1,
-            1, 0, 0, 0, 0, 0, 0, 1,
-            1, 0, 0, 3, 3, 0, 0, 1,
-            1, 0, 0, 0, 0, 0, 0, 1,
-            1, 1, 1, 1, 1, 1, 1, 1
-        ];
+    constructor(stageIndex) {
+        this.#map1d = mapArray[stageIndex];
 
         this.#map2d = this.#map1d.parse2d();
 
-        this.#boxWord = ["entity", "object"];
-        this.#holeWord = [
-            {
-                key: "개체",
-                value: "entity",
-            },
-            {
-                key: "객체",
-                value: "object",
-            }
-        ];
+        this.#boxWord = boxWord[stageIndex];
+        this.#holeWord = holeWord[stageIndex];
 
         this.#holeArray = [];
         this.#boxArray = [];
@@ -66,7 +55,14 @@ export default
             } else {
                 player.resetPosition();
             }
-        } else if (block instanceof Wall) {
+        } else if (
+            block instanceof WallFront || 
+            block instanceof WallUpper ||
+            block instanceof WallLeft ||
+            block instanceof WallRight ||
+            block instanceof WallEdgeLeft ||
+            block instanceof WallEdgeRight) 
+        {
             player.resetPosition();
         }
     }
@@ -272,8 +268,8 @@ export default
 Array.prototype.parse2d = function () {
     let array2d = [];
 
-    for (let i = 0; i < this.length; i += 8) {
-        array2d.push(this.slice(i, i + 8));
+    for (let i = 0; i < this.length; i += 12) {
+        array2d.push(this.slice(i, i + 12));
     }
 
     return array2d;
@@ -292,18 +288,33 @@ Array.prototype.make2dBlockArray = function (boxWord, holeWord, holeArr, boxArr)
                 case 0:
                     arr1d.push(new Tile(x, y));
                     break;
-                case 1:
-                    arr1d.push(new Wall(x, y));
-                    break;
                 case 2:
                     let box = new Box(x, y, boxWord[boxWordIndex++]);
                     arr1d.push(box);
-                    boxArr.push(box);
+                    // boxArr.push(box);
                     break;
                 case 3:
                     let hole = new Hole(x, y, holeWord[holeWordIndex++]);
                     arr1d.push(hole);
                     holeArr.push(hole);
+                    break;
+                case 10:
+                    arr1d.push(new WallFront(x, y));
+                    break;
+                case 11:
+                    arr1d.push(new WallLeft(x, y));
+                    break;
+                case 12:
+                    arr1d.push(new WallRight(x, y));
+                    break;
+                case 13:
+                    arr1d.push(new WallEdgeLeft(x, y));
+                    break;
+                case 14:
+                    arr1d.push(new WallEdgeRight(x, y));
+                    break;
+                case 15:
+                    arr1d.push(new WallUpper(x, y));
                     break;
             }
         })

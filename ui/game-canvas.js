@@ -9,9 +9,8 @@ import SFX from '../object/sfx.js';
 import Layer from '../item/Layer.js';
 import StartBtn from '../item/startBtn.js';
 
-
-const WIDTH = 768;
-const HEIGHT = 512;
+const WIDTH = 1024;
+const HEIGHT = 640;
 
 export default class GameCanvas {
 	#obj
@@ -27,6 +26,8 @@ export default class GameCanvas {
 	#timer
 	#sfx
 	#layer
+	#reset
+	#stageIndex
 	constructor() {
 		this.#obj = document.createElement('canvas');
 		this.#obj.tabIndex = 0;
@@ -45,11 +46,13 @@ export default class GameCanvas {
 
 		this.#layer = new Layer()
 		this.startBtn = new StartBtn();
+		this.#reset = false;
 
-		this.#map = new Map();
+		this.#stageIndex = 0;
+		this.#map = new Map(this.#stageIndex);
 		this.#player = new Player();
 		this.#hintBoard = new HintBoard();
-		this.#hint = new Hint();
+		this.#hint = new Hint(this.#stageIndex);
 		this.#timer = new Timer();
 		// this.#sfx = new SFX();
 
@@ -63,7 +66,7 @@ export default class GameCanvas {
 	  }
 
 	drawTitleScreen() {
-		requestAnimationFrame(this.drawTitleScreen.bind(this));
+		// requestAnimationFrame(this.drawTitleScreen.bind(this));
 
 		this.#layer.draw(this.#ctx)
 		this.startBtn.draw(this.#ctx)
@@ -79,15 +82,15 @@ export default class GameCanvas {
 	}
 
 	mouseDownHandler(e) {
-		console.log(e.offsetX);
+		console.log(e.offsetX, e.offsetY);
 		switch (this.#currentScreen) {
 			case 'titleScreen': 
-				if (290 <= e.offsetX && e.offsetX <= 475 
-					&& 300 <= e.offsetY && e.offsetY <= 335) {
+				if (280 <= e.offsetX && e.offsetX <= 525 
+					&& 260 <= e.offsetY && e.offsetY <= 340) {
 						this.#currentScreen = 'levelSelectionScreen';
 						setTimeout(() => {
 							this.drawLevelSelectionScreen();
-						}, 700);
+						}, 100);
 						this.#ctx.drawImage(this.#loading, 0, 0, this.#obj.width, this.#obj.height);
 					}
 					break;
@@ -100,7 +103,7 @@ export default class GameCanvas {
 						this.#currentScreen = 'runScreen';
 						setTimeout(() => {
 							this.run();
-						}, 700)
+						}, 100)
 						this.#ctx.drawImage(this.#loading, 0, 0, this.#obj.width, this.#obj.height);
 					}
 				break;
@@ -110,8 +113,9 @@ export default class GameCanvas {
 	keyDownHandler(e) {
 		// player의 상하좌우 움직임과 hole에 빠진 box를 꺼내는 동작 구현 
 		switch (e.key) {
+			// reset 버튼 구현 미완 
 			case "r":
-				document.location.reload();
+				this.#reset = true;
 				break;
 			case "w":
 				this.#player.move("up");
@@ -185,6 +189,7 @@ export default class GameCanvas {
 
 	paint() {
 		this.#map.draw(this.#ctx);
+		this.#timer.draw(this.#ctx);
 		this.#player.draw(this.#ctx);
 		this.#hintBoard.draw(this.#ctx);
 		this.#hint.draw(this.#ctx);
@@ -230,6 +235,16 @@ export default class GameCanvas {
 
 		let isClear = this.checkClear();
 		let isTimeOut = this.checkTimeOut();
+
+		if (this.#reset) {
+			this.#reset = false;
+
+			this.#map = new Map();
+			this.#player = new Player();
+			this.#hintBoard = new HintBoard();
+			this.#hint = new Hint();
+			this.#timer = new Timer();
+		}
 
 		if (isClear) {
 			this.showClearMessage();

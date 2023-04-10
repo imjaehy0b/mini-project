@@ -8,10 +8,10 @@ export default
     // x = 512, y = 0
     constructor() {
         this.#img = document.getElementById("hintWall");
-        this.#x = 512;
+        this.#x = 768;
         this.#y = 0;
         this.#width = 256;
-        this.#height = 512;
+        this.#height = 640;
     }
 
     draw(ctx) {
