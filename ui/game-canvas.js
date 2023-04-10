@@ -6,7 +6,7 @@ import Player from '../item/player.js';
 import HintBoard from '../object/hint-board.js';
 import Hint from '../object/hint.js';
 import SFX from '../object/sfx.js';
-import Layer from '../item/Layer.js';
+import Layer from '../item/layer.js';
 import StartBtn from '../item/startBtn.js';
 
 const WIDTH = 1024;
