@@ -8,10 +8,10 @@ export default class Layer {
   #hugeTree;
   #grass;
   #ground;
-
+  
   constructor() {
-    this.#width = 768;
-    this.#height = 512
+    this.#width = 1024;
+    this.#height = 640
 
     const ground = document.getElementById('ground');
     const grass = document.getElementById('grass');

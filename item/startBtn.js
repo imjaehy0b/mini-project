@@ -1,30 +1,41 @@
 export default class StartBtn {
+  #x
+  #y
+  #width
+  #height
+  #img
+  #startImg
+  #hoverImg
   constructor() {
-    this.x = 280;
-    this.y = 250;
-    this.width = 250;
-    this.height = 100;
+    this.#x = 400;
+    this.#y = 450;
+    this.#width = 250;
+    this.#height = 100;
 
-    this.img = document.getElementById('startBtn');
+    this.#img = document.getElementById('startBtn');
+    this.#startImg = document.getElementById('startBtn');
+    this.#hoverImg = document.getElementById('HoverBtn'); 
   }
 
-  buttonClick(e) {
-    console.log(e.offsetX);
-    if (
-      e.offsetX >= this.x &&
-      e.offsetX <= this.x + this.width &&
-      e.offsetY >= this.y &&
-      e.offsetY <= this.y + this.height
-    ) {
-      window.location.href = '/game/app.html';
-    }
-  }
+
+  buttonHover(e) {
+    console.log('hover');
+		if (
+		  e.offsetX >= this.#x &&
+		  e.offsetX <= this.#x + this.#width &&
+		  e.offsetY >= this.#y &&
+		  e.offsetY <= this.#y + this.#height
+		) {
+		  this.#img = this.#hoverImg;
+		} else this.#img = this.#startImg
+	  }
+
 
   draw(ctx) {
-    let x = this.x;
-    let y = this.y;
-    let width = this.width;
-    let height = this.height;
-    ctx.drawImage(this.img, x, y, width, height);
+    let x = this.#x;
+    let y = this.#y;
+    let width = this.#width;
+    let height = this.#height;
+    ctx.drawImage(this.#img, x, y, width, height);
   }
 }

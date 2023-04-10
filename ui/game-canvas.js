@@ -28,6 +28,8 @@ export default class GameCanvas {
 	#layer
 	#reset
 	#stageIndex
+	#btn
+	#startBtn
 	constructor() {
 		this.#obj = document.createElement('canvas');
 		this.#obj.tabIndex = 0;
@@ -45,8 +47,9 @@ export default class GameCanvas {
 		this.#loading = document.getElementById('loadingScreen');
 
 		this.#layer = new Layer()
-		this.startBtn = new StartBtn();
+		this.#startBtn = new StartBtn();
 		this.#reset = false;
+		this.#btn = true
 
 		this.#stageIndex = 0;
 		this.#map = new Map(this.#stageIndex);
@@ -56,20 +59,22 @@ export default class GameCanvas {
 		this.#timer = new Timer();
 		// this.#sfx = new SFX();
 
-		this.#obj.onmousedown = this.mouseDownHandler.bind(this);
+		// this.#obj.onmousedown = this.mouseDownHandler.bind(this);
+
+		this.#obj.addEventListener('click', this.mouseClick.bind(this));
+		this.#obj.addEventListener('mousemove', this.mouseMove.bind(this));
+
 		this.#obj.onkeydown = this.keyDownHandler.bind(this);
 		this.#obj.onkeyup = this.keyUpHandler.bind(this);
 	}
 
-	mouseClick(e) {
-		this.startBtn.buttonClick(e);
-	  }
 
 	drawTitleScreen() {
-		// requestAnimationFrame(this.drawTitleScreen.bind(this));
-
-		this.#layer.draw(this.#ctx)
-		this.startBtn.draw(this.#ctx)
+		if (this.#btn) {
+			requestAnimationFrame(this.drawTitleScreen.bind(this));
+			this.#layer.draw(this.#ctx)
+			this.#startBtn.draw(this.#ctx)
+		}
 	}
 
 	drawLevelSelectionScreen() {
@@ -81,16 +86,23 @@ export default class GameCanvas {
 		this.#ctx.drawImage(img, 0, 0, width, height);
 	}
 
-	mouseDownHandler(e) {
+	mouseMove(e) {
+		this.#startBtn.buttonHover(e);
+	}
+	
+
+	mouseClick(e) {
+		console.log(this.#currentScreen);
 		console.log(e.offsetX, e.offsetY);
 		switch (this.#currentScreen) {
 			case 'titleScreen': 
-				if (280 <= e.offsetX && e.offsetX <= 525 
-					&& 260 <= e.offsetY && e.offsetY <= 340) {
+				if (370 <= e.offsetX && e.offsetX <= 560 
+					&& 400 <= e.offsetY && e.offsetY <= 480) {
 						this.#currentScreen = 'levelSelectionScreen';
 						setTimeout(() => {
 							this.drawLevelSelectionScreen();
 						}, 100);
+						this.#btn = false
 						this.#ctx.drawImage(this.#loading, 0, 0, this.#obj.width, this.#obj.height);
 					}
 					break;
