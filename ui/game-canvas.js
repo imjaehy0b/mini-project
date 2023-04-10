@@ -92,11 +92,12 @@ export default class GameCanvas {
 	
 
 	mouseClick(e) {
+		console.log(this.#currentScreen);
 		console.log(e.offsetX, e.offsetY);
 		switch (this.#currentScreen) {
 			case 'titleScreen': 
-				if (475 <= e.offsetX && e.offsetX <= 740 
-					&& 590 <= e.offsetY && e.offsetY <= 620) {
+				if (370 <= e.offsetX && e.offsetX <= 560 
+					&& 400 <= e.offsetY && e.offsetY <= 480) {
 						this.#currentScreen = 'levelSelectionScreen';
 						setTimeout(() => {
 							this.drawLevelSelectionScreen();
