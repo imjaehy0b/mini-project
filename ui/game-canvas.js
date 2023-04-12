@@ -3,11 +3,15 @@
 import Timer from '../item/timer.js';
 import Map from '../item/map.js';
 import Player from '../item/player.js';
-import HintBoard from '../object/hint-board.js';
-import Hint from '../object/hint.js';
+// import Layer from '../item/layer.js';
+import StartBtn from '../start/startBtn.js';
+// import Title from '../item/title.js';
 import SFX from '../object/sfx.js';
-import Layer from '../item/layer.js';
-import StartBtn from '../item/startBtn.js';
+import SelectBackground from '../select/selectBackground.js';
+import LevelButton from '../select/levelButton.js';
+import BackGround from '../start/background.js';
+import Thunder from '../start/thunder.js';
+import ReversBackGround from '../start/reversBackground.js';
 
 const WIDTH = 1024;
 const HEIGHT = 640;
@@ -21,8 +25,6 @@ export default class GameCanvas {
 	#loading
 	#map
 	#player
-	#hintBoard
-	#hint
 	#timer
 	#sfx
 	#layer
@@ -30,6 +32,11 @@ export default class GameCanvas {
 	#stageIndex
 	#btn
 	#startBtn
+	#selectBackground
+	#levelButton
+	#background
+	#reversBackground
+	#thunder
 	constructor() {
 		this.#obj = document.createElement('canvas');
 		this.#obj.tabIndex = 0;
@@ -46,17 +53,19 @@ export default class GameCanvas {
 		this.#levelSelection = document.getElementById('levelSelectionScreen');
 		this.#loading = document.getElementById('loadingScreen');
 
-		this.#layer = new Layer()
+		this.#background = new BackGround()
+		this.#thunder = new Thunder()
+		this.#reversBackground = new ReversBackGround()
 		this.#startBtn = new StartBtn();
 		this.#reset = false;
 		this.#btn = true
 
 		this.#stageIndex = 0;
 		this.#map = new Map(this.#stageIndex);
-		this.#player = new Player();
-		this.#hintBoard = new HintBoard();
-		this.#hint = new Hint(this.#stageIndex);
+		this.#player = new Player(this.#stageIndex);
 		this.#timer = new Timer();
+		this.#selectBackground = new SelectBackground();
+		this.#levelButton = new LevelButton();
 		// this.#sfx = new SFX();
 
 		// this.#obj.onmousedown = this.mouseDownHandler.bind(this);
@@ -68,38 +77,44 @@ export default class GameCanvas {
 		this.#obj.onkeyup = this.keyUpHandler.bind(this);
 	}
 
-
 	drawTitleScreen() {
 		if (this.#btn) {
 			requestAnimationFrame(this.drawTitleScreen.bind(this));
-			this.#layer.draw(this.#ctx)
+			this.#background.draw(this.#ctx)//기본배경
+			this.#background.update(this.#ctx)
 			this.#startBtn.draw(this.#ctx)
 		}
 	}
 
 	drawLevelSelectionScreen() {
-		let img = this.#levelSelection;
-		let width = this.#obj.width;
-		let height = this.#obj.height;
+		if (this.#btn) {
+			requestAnimationFrame(this.drawLevelSelectionScreen.bind(this));
+			this.#selectBackground.draw(this.#ctx)//기본배경
+			this.#levelButton.draw(this.#ctx)		
+		}
 
-		this.#ctx.clearRect(0, 0, width, height);
-		this.#ctx.drawImage(img, 0, 0, width, height);
+		// let img = this.#levelSelection;
+		// let width = this.#obj.width;
+		// let height = this.#obj.height;
+
+		// this.#ctx.clearRect(0, 0, width, height);
+		// this.#ctx.drawImage(img, 0, 0, width, height);
 	}
 
 	mouseMove(e) {
 		this.#startBtn.buttonHover(e);
+		this.#levelButton.buttonHover(e)
 	}
 	
-
 	mouseClick(e) {
-		console.log(this.#currentScreen);
-		console.log(e.offsetX, e.offsetY);
+		console.log(e.offsetX, e.offsetY)
 		switch (this.#currentScreen) {
 			case 'titleScreen': 
-				if (370 <= e.offsetX && e.offsetX <= 560 
-					&& 400 <= e.offsetY && e.offsetY <= 480) {
+				if (400 <= e.offsetX && e.offsetX <= 590 
+					&& 490 <= e.offsetY && e.offsetY <= 560) {
 						this.#currentScreen = 'levelSelectionScreen';
 						setTimeout(() => {
+							this.#btn = true
 							this.drawLevelSelectionScreen();
 						}, 100);
 						this.#btn = false
@@ -108,16 +123,51 @@ export default class GameCanvas {
 					break;
 
 			case 'levelSelectionScreen': 
-				if (120 <= e.offsetX && 
-					  e.offsetX <= 210 && 
-						195 <= e.offsetY && 
-						e.offsetY <= 250) {
+				if (
+					210 <= e.offsetX && 
+					e.offsetX <= 290 && 
+					295 <= e.offsetY && 
+					e.offsetY <= 380
+					) {
 						this.#currentScreen = 'runScreen';
+						this.#stageIndex = 0;
 						setTimeout(() => {
 							this.run();
 						}, 100)
 						this.#ctx.drawImage(this.#loading, 0, 0, this.#obj.width, this.#obj.height);
 					}
+				else if (
+					480 <= e.offsetX && 
+					e.offsetX <= 630 && 
+					250 <= e.offsetY && 
+					e.offsetY <= 350
+					) {
+						this.#currentScreen = 'runScreen';
+						this.#stageIndex = 1;
+						this.#map = new Map(this.#stageIndex);
+						this.#player = new Player(this.#stageIndex);
+						this.#timer = new Timer();
+						setTimeout(() => {
+							this.run();
+						}, 100)
+						this.#ctx.drawImage(this.#loading, 0, 0, this.#obj.width, this.#obj.height);
+				}
+				else if (
+					750 <= e.offsetX && 
+					e.offsetX <= 900 && 
+					250 <= e.offsetY && 
+					e.offsetY <= 350
+					) {
+						this.#currentScreen = 'runScreen';
+						this.#stageIndex = 2;
+						this.#map = new Map(this.#stageIndex);
+						this.#player = new Player(this.#stageIndex);
+						this.#timer = new Timer();
+						setTimeout(() => {
+							this.run();
+						}, 100)
+						this.#ctx.drawImage(this.#loading, 0, 0, this.#obj.width, this.#obj.height);
+				}
 				break;
 		}
 	}
@@ -203,8 +253,6 @@ export default class GameCanvas {
 		this.#map.draw(this.#ctx);
 		this.#timer.draw(this.#ctx);
 		this.#player.draw(this.#ctx);
-		this.#hintBoard.draw(this.#ctx);
-		this.#hint.draw(this.#ctx);
 	}
 
 	checkClear() {
@@ -251,10 +299,8 @@ export default class GameCanvas {
 		if (this.#reset) {
 			this.#reset = false;
 
-			this.#map = new Map();
+			this.#map = new Map(this.#stageIndex);
 			this.#player = new Player();
-			this.#hintBoard = new HintBoard();
-			this.#hint = new Hint();
 			this.#timer = new Timer();
 		}
 
@@ -270,6 +316,7 @@ export default class GameCanvas {
 			this.showTimeOutMessage();
 			return;
 		}
+		
 		requestAnimationFrame(this.run.bind(this));
 		// requestAnimationFrame이 블록 최상단에 있을 때랑 최하단에 있을 때 차이 발생
 		// 최상단에 있을 때는 return의 영향을 받지 않고 123이 계속 출력 되고

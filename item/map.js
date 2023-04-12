@@ -2,28 +2,27 @@ import Tile from "../object/tile.js";
 import Wall from "../object/wall.js";
 import Box from "../object/box.js";
 import Hole from "../object/hole.js";
-import {mapArray, boxWord, holeWord} from "../data.js";
+import WormHole from "../object/worm-hole.js";
+import {mapArray, mapLength} from "../data.js";
 
 export default
     class Map {
     #map1d
     #map2d
     #mapBlocks
-    #boxWord
-    #holeWord
     #holeArray
+    #wormHoleArray
     #boxArray
     constructor(stageIndex) {
         this.#map1d = mapArray[stageIndex];
 
-        this.#map2d = this.#map1d.parse2d();
-
-        this.#boxWord = boxWord[stageIndex];
-        this.#holeWord = holeWord[stageIndex];
+        this.#map2d = this.#map1d.parse2d(mapLength[stageIndex]);
 
         this.#holeArray = [];
+        this.#wormHoleArray = [];
         this.#boxArray = [];
-        this.#mapBlocks = this.#map2d.make2dBlockArray(this.#boxWord, this.#holeWord, this.#holeArray, this.#boxArray);
+        this.#mapBlocks = this.#map2d.make2dBlockArray(this.#holeArray, this.#wormHoleArray, this.#boxArray, stageIndex);
+        console.log(this.#wormHoleArray);
     }
 
     detectCollisionWith(player) {
@@ -43,14 +42,21 @@ export default
                 || (!hasObstacle.underSide && direction.down)
                 || (!hasObstacle.leftSide && direction.left)
                 || (!hasObstacle.rightSide && direction.right);
-            console.log(canBeMoved);
             if (canBeMoved) {
                 this.changeBoxPosition(x, y, direction);
             } else {
                 player.resetPosition();
             }
-        } else if (block instanceof Wall || block instanceof Hole) {
+        } else if (block instanceof Wall) {
             player.resetPosition();
+        } else if (block instanceof WormHole) {
+            for (let wormHole of this.#wormHoleArray) {
+                if (wormHole !== block) {
+                    console.log(wormHole);
+                    console.log(block);
+                    player.warp(wormHole.x, wormHole.y);
+                }
+            }
         }
     }
 
@@ -223,12 +229,8 @@ export default
         for (let box of this.#boxArray) {
             for (let hole of this.#holeArray) {
                 if (hole.x == box.x && hole.y == box.y) {
-                    let isSame = (box.word == hole.wordValue) ? true : false;
-
-                    if (isSame) {
-                        answerNum++;
-                        break;
-                    }
+                    answerNum++;
+                    break;
                 }
             }
         }
@@ -252,20 +254,18 @@ export default
     }
 }
 
-Array.prototype.parse2d = function () {
+Array.prototype.parse2d = function (len) {
     let array2d = [];
 
-    for (let i = 0; i < this.length; i += 12) {
-        array2d.push(this.slice(i, i + 12));
+    for (let i = 0; i < this.length; i += len) {
+        array2d.push(this.slice(i, i + len));
     }
 
     return array2d;
 }
 
-Array.prototype.make2dBlockArray = function (boxWord, holeWord, holeArr, boxArr) {
+Array.prototype.make2dBlockArray = function (holeArr, wormHoleArr, boxArr, stageIndex) {
     let arr2d = [];
-    let boxWordIndex = 0;
-    let holeWordIndex = 0;
 
     this.forEach((row, y) => {
         let arr1d = [];
@@ -273,35 +273,25 @@ Array.prototype.make2dBlockArray = function (boxWord, holeWord, holeArr, boxArr)
         row.forEach((column, x) => {
             switch (column) {
                 case 0:
-                    arr1d.push(new Tile(x, y));
+                    arr1d.push(new Tile(x, y, stageIndex));
+                    break;
+                case 1:
+                    let wormHole = new WormHole(x, y);
+                    arr1d.push(wormHole);
+                    wormHoleArr.push(wormHole);
                     break;
                 case 2:
-                    let box = new Box(x, y, boxWord[boxWordIndex++]);
+                    let box = new Box(x, y);
                     arr1d.push(box);
                     boxArr.push(box);
                     break;
                 case 3:
-                    let hole = new Hole(x, y, holeWord[holeWordIndex++]);
+                    let hole = new Hole(x, y);
                     arr1d.push(hole);
                     holeArr.push(hole);
                     break;
                 case 10:
-                    arr1d.push(new Wall(x, y, 10));
-                    break;
-                case 11:
-                    arr1d.push(new Wall(x, y, 11));
-                    break;
-                case 12:
-                    arr1d.push(new Wall(x, y, 12));
-                    break;
-                case 13:
-                    arr1d.push(new Wall(x, y, 13));
-                    break;
-                case 14:
-                    arr1d.push(new Wall(x, y, 14));
-                    break;
-                case 15:
-                    arr1d.push(new Wall(x, y, 15));
+                    arr1d.push(new Wall(x, y, stageIndex));
                     break;
             }
         })

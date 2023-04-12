@@ -8,18 +8,17 @@ export default class StartBtn {
   #hoverImg
   constructor() {
     this.#x = 400;
-    this.#y = 450;
+    this.#y = 520;
     this.#width = 250;
     this.#height = 100;
 
     this.#img = document.getElementById('startBtn');
     this.#startImg = document.getElementById('startBtn');
-    this.#hoverImg = document.getElementById('HoverBtn'); 
+    this.#hoverImg = document.getElementById('startBtnHover'); 
   }
 
 
   buttonHover(e) {
-    console.log('hover');
 		if (
 		  e.offsetX >= this.#x &&
 		  e.offsetX <= this.#x + this.#width &&

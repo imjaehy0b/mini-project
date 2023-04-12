@@ -24,9 +24,9 @@ export default
         let width = this.#width;
         let height = this.#height;
         ctx.drawImage(img, x * width, y * height, width, height);
-        ctx.fillStyle = "black";
-        ctx.textAlign = "center";
-        ctx.fillText(this.#word, x * width + width/2, y * height + height/2);
+        // ctx.fillStyle = "black";
+        // ctx.textAlign = "center";
+        // ctx.fillText(this.#word, x * width + width/2, y * height + height/2);
     }
 
     setPosition(x, y) {

@@ -1,3 +1,5 @@
+import { playerPosition } from "../data.js";
+
 export default
     class Player {
     #img
@@ -7,10 +9,10 @@ export default
     #height
     #step
     #direction
-    constructor() {
+    constructor(stageIndex) {
         this.#img = document.getElementById("player");
-        this.#x = 3;
-        this.#y = 2;
+        this.#x = playerPosition[stageIndex][0];
+        this.#y = playerPosition[stageIndex][1];
         this.#width = 64;
         this.#height = 64;
         this.#step = 1;
@@ -21,6 +23,7 @@ export default
             left: false,
             right: false,
         };
+
     }
 
     // player가 움직일 direction을 설정 
@@ -101,6 +104,22 @@ export default
         else if (this.#direction.down) this.#y -= 1;
         else if (this.#direction.left) this.#x += 1;
         else if (this.#direction.right) this.#x -= 1;
+    }
+
+    warp(x, y) {
+        if (this.#direction.up) {
+            this.#x = x;
+            this.#y = y-1;   
+        } else if (this.#direction.down) {
+            this.#x = x;
+            this.#y = y+1;
+        } else if (this.#direction.left) { 
+            this.#x = x-1;
+            this.#y = y;
+        } else if (this.#direction.right) { 
+            this.#x = x+1;
+            this.#y = y;
+        }
     }
 
     get x() {
