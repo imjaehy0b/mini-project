@@ -14,6 +14,7 @@ export default
     #holeArray
     #wormHoleArray
     #boxArray
+    #onWormHole
     constructor(stageIndex) {
         this.#stageIndex = stageIndex;
         this.#map1d = mapArray[this.#stageIndex];
@@ -24,6 +25,7 @@ export default
         this.#wormHoleArray = [];
         this.#boxArray = [];
         this.#mapBlocks = this.#map2d.make2dBlockArray(this.#holeArray, this.#wormHoleArray, this.#boxArray, this.#stageIndex);
+        this.#onWormHole = null;
     }
 
     detectCollisionWith(player) {
@@ -53,13 +55,7 @@ export default
         } else if (block instanceof Wall) {
             player.resetPosition();
         } else if (block instanceof WormHole) {
-            for (let wormHole of this.#wormHoleArray) {
-                if (wormHole !== block) {
-                    console.log(wormHole);
-                    console.log(block);
-                    player.warp(wormHole.x, wormHole.y);
-                }
-            }
+            this.#onWormHole();
         }
     }
 
@@ -101,11 +97,13 @@ export default
                 this.#mapBlocks[y][x] = new Hole(x, y);
             } else if (boxInHole) {
                 box.inHole = false;
+                box.setImg();
                 box.setPosition(x, y - 1);
                 this.#mapBlocks[y - 1][x] = box;
                 this.#mapBlocks[y][x] = new Hole(x, y);
             } else if (upperBlock instanceof Hole) {
                 box.inHole = true;
+                box.setImg();
                 box.setPosition(x, y - 1);
                 this.#mapBlocks[y - 1][x] = box;
                 this.#mapBlocks[y][x] = new Tile(x, y, this.#stageIndex);
@@ -129,11 +127,13 @@ export default
                 this.#mapBlocks[y][x] = new Hole(x, y);
             } else if (boxInHole) {
                 box.inHole = false;
+                box.setImg();
                 box.setPosition(x, y + 1);
                 this.#mapBlocks[y + 1][x] = box;
                 this.#mapBlocks[y][x] = new Hole(x, y);
             } else if (underBlock instanceof Hole) {
                 box.inHole = true;
+                box.setImg();
                 box.setPosition(x, y + 1);
                 this.#mapBlocks[y + 1][x] = box;
                 this.#mapBlocks[y][x] = new Tile(x, y, this.#stageIndex);
@@ -152,11 +152,14 @@ export default
                 this.#mapBlocks[y][x] = new Hole(x, y);
             } else if (boxInHole) {
                 box.inHole = false;
+                box.setImg();
                 box.setPosition(x - 1, y);
                 this.#mapBlocks[y][x - 1] = box;
                 this.#mapBlocks[y][x] = new Hole(x, y);
             } else if (leftBlock instanceof Hole) {
                 box.inHole = true;
+                box.setImg();
+                console.log(box);
                 box.setPosition(x - 1, y);
                 this.#mapBlocks[y][x - 1] = box;
                 this.#mapBlocks[y][x] = new Tile(x, y, this.#stageIndex);
@@ -175,11 +178,13 @@ export default
                 this.#mapBlocks[y][x] = new Hole(x, y);
             } else if (boxInHole) {
                 box.inHole = false;
+                box.setImg();
                 box.setPosition(x + 1, y);
                 this.#mapBlocks[y][x + 1] = box;
                 this.#mapBlocks[y][x] = new Hole(x, y);
             } else if (rightBlock instanceof Hole) {
                 box.inHole = true;
+                box.setImg();
                 box.setPosition(x + 1, y);
                 this.#mapBlocks[y][x + 1] = box;
                 this.#mapBlocks[y][x] = new Tile(x, y, this.#stageIndex);
@@ -327,7 +332,12 @@ export default
     get map2d() {
         return this.#map2d;
     }
+
+    set onWormHole(callback) {
+        this.#onWormHole = callback;
+    }
 }
+
 
 Array.prototype.parse2d = function (len) {
     let array2d = [];
@@ -351,9 +361,7 @@ Array.prototype.make2dBlockArray = function (holeArr, wormHoleArr, boxArr, stage
                     arr1d.push(new Tile(x, y, stageIndex));
                     break;
                 case 1:
-                    let wormHole = new WormHole(x, y);
-                    arr1d.push(wormHole);
-                    wormHoleArr.push(wormHole);
+                    arr1d.push(new Wall(x, y, stageIndex));
                     break;
                 case 2:
                     let box = new Box(x, y);
@@ -365,8 +373,10 @@ Array.prototype.make2dBlockArray = function (holeArr, wormHoleArr, boxArr, stage
                     arr1d.push(hole);
                     holeArr.push(hole);
                     break;
-                case 10:
-                    arr1d.push(new Wall(x, y, stageIndex));
+                case 4:
+                    let wormHole = new WormHole(x, y);
+                    arr1d.push(wormHole);
+                    wormHoleArr.push(wormHole);
                     break;
             }
         })

@@ -81,7 +81,6 @@ export default class LevelButton {
       e.offsetY >= this.#y && e.offsetY <= this.#y + this.#height
     ) {
       this.#hardImg = this.#hardHover;
-      console.log(this.#hardImg);
     } else this.#hardImg = this.#hardImg2;
   }
 
