@@ -30,6 +30,7 @@ export default class GameCanvas {
 	#layer
 	#reset
 	#stageIndex
+	#clearStage
 	#btn
 	#startBtn
 	#selectBackground
@@ -50,10 +51,10 @@ export default class GameCanvas {
 
 		this.#currentScreen = 'titleScreen';
 		
-		this.#sfx = new SFX();
 		this.#levelSelection = document.getElementById('levelSelectionScreen');
 		this.#loading = document.getElementById('loadingScreen');
 		
+		this.#sfx = new SFX();
 		this.#background = new BackGround()
 		this.#thunder = new Thunder()
 		this.#reversBackground = new ReversBackGround()
@@ -62,6 +63,7 @@ export default class GameCanvas {
 		this.#btn = true
 
 		this.#stageIndex = 0;
+		this.#clearStage = [false, false, false];
 		this.#map = new Map(this.#stageIndex);
 		this.#player = new Player(this.#stageIndex);
 		this.#timer = new Timer();
@@ -136,6 +138,10 @@ export default class GameCanvas {
 						this.#obj.height = 384;
 						this.#currentScreen = 'runScreen';
 						this.#stageIndex = 0;
+						this.#clearStage[this.#stageIndex] = false;
+						this.#map = new Map(this.#stageIndex);
+						this.#player = new Player(this.#stageIndex);
+						this.#timer = new Timer();
 						setTimeout(() => {
 							// this.#sfx.pauseSelection();
 							this.run();
@@ -155,6 +161,7 @@ export default class GameCanvas {
 
 						this.#currentScreen = 'runScreen';
 						this.#stageIndex = 1;
+						this.#clearStage[this.#stageIndex] = false;
 						this.#map = new Map(this.#stageIndex);
 						this.#player = new Player(this.#stageIndex);
 						this.#timer = new Timer();
@@ -175,6 +182,7 @@ export default class GameCanvas {
 						this.#obj.height = 448;
 						this.#currentScreen = 'runScreen';
 						this.#stageIndex = 2;
+						this.#clearStage[this.#stageIndex] = false;
 						this.#map = new Map(this.#stageIndex);
 						this.#player = new Player(this.#stageIndex);
 						this.#timer = new Timer();
@@ -322,9 +330,22 @@ export default class GameCanvas {
 		}
 
 		if (isClear && this.#stageIndex == 2) {
-			// this.showClearMessage();
-			this.#map.openWormHole();
+			this.#clearStage[this.#stageIndex] = true;
+			console.log(this.#clearStage);
+			if (this.#clearStage[0] && this.#clearStage[1] && this.#clearStage[2]) {
+				this.#map.openWormHole();
+
+			} else {
+				this.showClearMessage();
+				this.#currentScreen = 'levelSelectionScreen';
+				this.#obj.width = WIDTH;
+				this.#obj.height = HEIGHT;
+				this.#btn = true;
+				this.drawLevelSelectionScreen();
+			}
 		} else if (isClear) {
+			this.#clearStage[this.#stageIndex] = true;
+			console.log(this.#clearStage);
 			this.showClearMessage();
 			this.#currentScreen = 'levelSelectionScreen';
 			this.#obj.width = WIDTH;
