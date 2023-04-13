@@ -32,10 +32,10 @@ export default
 
         let block = this.#mapBlocks[y][x];
         if (block instanceof Box) {
-            if (block.inHole) {
-                player.resetPosition();
-                return;
-            }
+            // if (block.inHole) {
+            //     player.resetPosition();
+            //     return;
+            // }
 
             let hasObstacle = this.checkObstaclesAround(player);
             let canBeMoved = (!hasObstacle.upperSide && direction.up)
@@ -63,10 +63,35 @@ export default
     changeBoxPosition(x, y, direction) {
         let boxInHole = this.#mapBlocks[y][x].inHole;
         if (boxInHole) {
+            // if (direction.up) {
+            //     let box = this.#mapBlocks[y][x];
+            //     box.setPosition(x, y - 1);
+            //     this.#mapBlocks[y - 1][x] = box;
+            //     this.#mapBlocks[y][x] = new Hole(x, y);
+            // } else if (direction.down) {
+            //     let box = this.#mapBlocks[y][x];
+            //     box.setPosition(x, y + 1);
+            //     this.#mapBlocks[y + 1][x] = box;
+            //     this.#mapBlocks[y][x] = new Hole(x, y);
+            // } else if (direction.left) {
+            //     let box = this.#mapBlocks[y][x];
+            //     box.setPosition(x - 1, y);
+            //     this.#mapBlocks[y][x - 1] = box;
+            //     this.#mapBlocks[y][x] = new Hole(x, y);
+            // } else if (direction.right) {
+            //     let box = this.#mapBlocks[y][x];
+            //     box.setPosition(x + 1, y);
+            //     this.#mapBlocks[y][x + 1] = box;
+            //     this.#mapBlocks[y][x] = new Hole(x, y);
+            // }
             return;
         }
 
         if (direction.up) {
+            // if (boxInHole) {
+
+            // }
+
             let box = this.#mapBlocks[y][x];
             let upperBlock = this.#mapBlocks[y - 1][x];
 

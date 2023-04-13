@@ -140,6 +140,7 @@ export default class GameCanvas {
 							// this.#sfx.pauseSelection();
 							this.run();
 						}, 100)
+						this.#btn = false;
 						this.#sfx.pauseSelection();
 						this.#ctx.drawImage(this.#loading, 0, 0, this.#obj.width, this.#obj.height);
 					}
@@ -161,6 +162,7 @@ export default class GameCanvas {
 							this.#sfx.pauseSelection();
 							this.run();
 						}, 100)
+						this.#btn = false;
 						this.#ctx.drawImage(this.#loading, 0, 0, this.#obj.width, this.#obj.height);
 				}
 				else if (
@@ -179,6 +181,7 @@ export default class GameCanvas {
 						setTimeout(() => {
 							this.run();
 						}, 100)
+						this.#btn = false;
 						this.#ctx.drawImage(this.#loading, 0, 0, this.#obj.width, this.#obj.height);
 				}
 				break;
@@ -321,7 +324,9 @@ export default class GameCanvas {
 		if (isClear) {
 			this.showClearMessage();
 			this.#currentScreen = 'levelSelectionScreen';
-			
+			this.#obj.width = WIDTH;
+			this.#obj.height = HEIGHT;
+			this.#btn = true;
 			this.drawLevelSelectionScreen();
 			return;
 		}
