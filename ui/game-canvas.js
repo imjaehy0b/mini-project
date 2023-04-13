@@ -321,7 +321,10 @@ export default class GameCanvas {
 			this.#timer = new Timer(this.#stageIndex);
 		}
 
-		if (isClear) {
+		if (isClear && this.#stageIndex == 2) {
+			// this.showClearMessage();
+			this.#map.openWormHole();
+		} else if (isClear) {
 			this.showClearMessage();
 			this.#currentScreen = 'levelSelectionScreen';
 			this.#obj.width = WIDTH;

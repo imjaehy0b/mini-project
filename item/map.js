@@ -7,6 +7,7 @@ import {mapArray, mapLength} from "../data.js";
 
 export default
     class Map {
+    #stageIndex    
     #map1d
     #map2d
     #mapBlocks
@@ -14,15 +15,15 @@ export default
     #wormHoleArray
     #boxArray
     constructor(stageIndex) {
-        this.#map1d = mapArray[stageIndex];
+        this.#stageIndex = stageIndex;
+        this.#map1d = mapArray[this.#stageIndex];
 
-        this.#map2d = this.#map1d.parse2d(mapLength[stageIndex]);
+        this.#map2d = this.#map1d.parse2d(mapLength[this.#stageIndex]);
 
         this.#holeArray = [];
         this.#wormHoleArray = [];
         this.#boxArray = [];
-        this.#mapBlocks = this.#map2d.make2dBlockArray(this.#holeArray, this.#wormHoleArray, this.#boxArray, stageIndex);
-        console.log(this.#wormHoleArray);
+        this.#mapBlocks = this.#map2d.make2dBlockArray(this.#holeArray, this.#wormHoleArray, this.#boxArray, this.#stageIndex);
     }
 
     detectCollisionWith(player) {
@@ -38,10 +39,12 @@ export default
             // }
 
             let hasObstacle = this.checkObstaclesAround(player);
-            let canBeMoved = (!hasObstacle.upperSide && direction.up)
-                || (!hasObstacle.underSide && direction.down)
-                || (!hasObstacle.leftSide && direction.left)
-                || (!hasObstacle.rightSide && direction.right);
+            let canBeMoved = 
+                (!hasObstacle.upperSide && direction.up) ||
+                (!hasObstacle.underSide && direction.down) ||
+                (!hasObstacle.leftSide && direction.left) ||
+                (!hasObstacle.rightSide && direction.right);
+
             if (canBeMoved) {
                 this.changeBoxPosition(x, y, direction);
             } else {
@@ -61,87 +64,130 @@ export default
     }
 
     changeBoxPosition(x, y, direction) {
+        // if (boxInHole) {
+        //     if (direction.up) {
+        //         let box = this.#mapBlocks[y][x];
+        //         box.setPosition(x, y - 1);
+        //         this.#mapBlocks[y - 1][x] = box;
+        //         this.#mapBlocks[y][x] = new Hole(x, y);
+        //     } else if (direction.down) {
+        //         let box = this.#mapBlocks[y][x];
+        //         box.setPosition(x, y + 1);
+        //         this.#mapBlocks[y + 1][x] = box;
+        //         this.#mapBlocks[y][x] = new Hole(x, y);
+        //     } else if (direction.left) {
+        //         let box = this.#mapBlocks[y][x];
+        //         box.setPosition(x - 1, y);
+        //         this.#mapBlocks[y][x - 1] = box;
+        //         this.#mapBlocks[y][x] = new Hole(x, y);
+        //     } else if (direction.right) {
+        //         let box = this.#mapBlocks[y][x];
+        //         box.setPosition(x + 1, y);
+        //         this.#mapBlocks[y][x + 1] = box;
+        //         this.#mapBlocks[y][x] = new Hole(x, y);
+        //     }
+        //     return;
+        // }
+
         let boxInHole = this.#mapBlocks[y][x].inHole;
-        if (boxInHole) {
-            // if (direction.up) {
-            //     let box = this.#mapBlocks[y][x];
-            //     box.setPosition(x, y - 1);
-            //     this.#mapBlocks[y - 1][x] = box;
-            //     this.#mapBlocks[y][x] = new Hole(x, y);
-            // } else if (direction.down) {
-            //     let box = this.#mapBlocks[y][x];
-            //     box.setPosition(x, y + 1);
-            //     this.#mapBlocks[y + 1][x] = box;
-            //     this.#mapBlocks[y][x] = new Hole(x, y);
-            // } else if (direction.left) {
-            //     let box = this.#mapBlocks[y][x];
-            //     box.setPosition(x - 1, y);
-            //     this.#mapBlocks[y][x - 1] = box;
-            //     this.#mapBlocks[y][x] = new Hole(x, y);
-            // } else if (direction.right) {
-            //     let box = this.#mapBlocks[y][x];
-            //     box.setPosition(x + 1, y);
-            //     this.#mapBlocks[y][x + 1] = box;
-            //     this.#mapBlocks[y][x] = new Hole(x, y);
-            // }
-            return;
-        }
+        let box = this.#mapBlocks[y][x];
 
         if (direction.up) {
-            // if (boxInHole) {
-
-            // }
-
-            let box = this.#mapBlocks[y][x];
             let upperBlock = this.#mapBlocks[y - 1][x];
-
-            if (upperBlock instanceof Hole) {
+            
+            if (boxInHole && upperBlock instanceof Hole) {
+                box.setPosition(x, y - 1);
+                this.#mapBlocks[y - 1][x] = box;
+                this.#mapBlocks[y][x] = new Hole(x, y);
+            } else if (boxInHole) {
+                box.inHole = false;
+                box.setPosition(x, y - 1);
+                this.#mapBlocks[y - 1][x] = box;
+                this.#mapBlocks[y][x] = new Hole(x, y);
+            } else if (upperBlock instanceof Hole) {
                 box.inHole = true;
+                box.setPosition(x, y - 1);
+                this.#mapBlocks[y - 1][x] = box;
+                this.#mapBlocks[y][x] = new Tile(x, y, this.#stageIndex);
+            } else {
+                box.setPosition(x, y - 1);
+                this.#mapBlocks[y - 1][x] = box;
+                this.#mapBlocks[y][x] = new Tile(x, y, this.#stageIndex);
             }
 
             // mapBlocks에서 box의 위치를 한 칸 위로 옮기고 그 자리를 타일로 대체
-            box.setPosition(x, y - 1);
-            this.#mapBlocks[y - 1][x] = box;
-            this.#mapBlocks[y][x] = new Tile(x, y);
+            // box.setPosition(x, y - 1);
+            // this.#mapBlocks[y - 1][x] = box;
+            // this.#mapBlocks[y][x] = new Tile(x, y);
 
         } else if (direction.down) {
-            let box = this.#mapBlocks[y][x];
             let underBlock = this.#mapBlocks[y + 1][x];
 
-            if (underBlock instanceof Hole) {
+            if (boxInHole && underBlock instanceof Hole) {
+                box.setPosition(x, y + 1);
+                this.#mapBlocks[y + 1][x] = box;
+                this.#mapBlocks[y][x] = new Hole(x, y);
+            } else if (boxInHole) {
+                box.inHole = false;
+                box.setPosition(x, y + 1);
+                this.#mapBlocks[y + 1][x] = box;
+                this.#mapBlocks[y][x] = new Hole(x, y);
+            } else if (underBlock instanceof Hole) {
                 box.inHole = true;
+                box.setPosition(x, y + 1);
+                this.#mapBlocks[y + 1][x] = box;
+                this.#mapBlocks[y][x] = new Tile(x, y, this.#stageIndex);
+            } else {
+                box.setPosition(x, y + 1);
+                this.#mapBlocks[y + 1][x] = box;
+                this.#mapBlocks[y][x] = new Tile(x, y, this.#stageIndex);
             }
-
-            // mapBlocks에서 box의 위치를 한 칸 밑으로 옮기고 그 자리를 타일로 대체 
-            box.setPosition(x, y + 1);
-            this.#mapBlocks[y + 1][x] = box;
-            this.#mapBlocks[y][x] = new Tile(x, y);
 
         } else if (direction.left) {
-            let box = this.#mapBlocks[y][x];
             let leftBlock = this.#mapBlocks[y][x - 1];
-
-            if (leftBlock instanceof Hole) {
+            
+            if (boxInHole && leftBlock instanceof Hole) {
+                box.setPosition(x - 1, y);
+                this.#mapBlocks[y][x - 1] = box;
+                this.#mapBlocks[y][x] = new Hole(x, y);
+            } else if (boxInHole) {
+                box.inHole = false;
+                box.setPosition(x - 1, y);
+                this.#mapBlocks[y][x - 1] = box;
+                this.#mapBlocks[y][x] = new Hole(x, y);
+            } else if (leftBlock instanceof Hole) {
                 box.inHole = true;
+                box.setPosition(x - 1, y);
+                this.#mapBlocks[y][x - 1] = box;
+                this.#mapBlocks[y][x] = new Tile(x, y, this.#stageIndex);
+            } else {
+                box.setPosition(x - 1, y);
+                this.#mapBlocks[y][x - 1] = box;
+                this.#mapBlocks[y][x] = new Tile(x, y, this.#stageIndex);
             }
-
-            // mapBlocks에서 box의 위치를 한 칸 왼쪽으로 옮기고 그 자리를 타일로 대체 
-            box.setPosition(x - 1, y);
-            this.#mapBlocks[y][x - 1] = box;
-            this.#mapBlocks[y][x] = new Tile(x, y);
 
         } else if (direction.right) {
-            let box = this.#mapBlocks[y][x];
             let rightBlock = this.#mapBlocks[y][x + 1];
 
-            if (rightBlock instanceof Hole) {
+            if (boxInHole && rightBlock instanceof Hole) {
+                box.setPosition(x + 1, y);
+                this.#mapBlocks[y][x + 1] = box;
+                this.#mapBlocks[y][x] = new Hole(x, y);
+            } else if (boxInHole) {
+                box.inHole = false;
+                box.setPosition(x + 1, y);
+                this.#mapBlocks[y][x + 1] = box;
+                this.#mapBlocks[y][x] = new Hole(x, y);
+            } else if (rightBlock instanceof Hole) {
                 box.inHole = true;
+                box.setPosition(x + 1, y);
+                this.#mapBlocks[y][x + 1] = box;
+                this.#mapBlocks[y][x] = new Tile(x, y, this.#stageIndex);
+            } else {
+                box.setPosition(x + 1, y);
+                this.#mapBlocks[y][x + 1] = box;
+                this.#mapBlocks[y][x] = new Tile(x, y, this.#stageIndex);
             }
-
-            // mapBlocks에서 box의 위치를 한 칸 왼쪽으로 옮기고 그 자리를 타일로 대체
-            box.setPosition(x + 1, y);
-            this.#mapBlocks[y][x + 1] = box;
-            this.#mapBlocks[y][x] = new Tile(x, y);
         }
     }
 
@@ -264,6 +310,10 @@ export default
             return true;
         }
         return false;
+    }
+
+    openWormHole() {
+        this.#mapBlocks[3][6] = new WormHole(6, 3);
     }
 
     draw(ctx) {
