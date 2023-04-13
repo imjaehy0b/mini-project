@@ -3,15 +3,12 @@
 import Timer from '../item/timer.js';
 import Map from '../item/map.js';
 import Player from '../item/player.js';
-// import Layer from '../item/layer.js';
 import StartBtn from '../start/startBtn.js';
-// import Title from '../item/title.js';
 import SFX from '../object/sfx.js';
 import SelectBackground from '../select/selectBackground.js';
 import LevelButton from '../select/levelButton.js';
 import BackGround from '../start/background.js';
-import Thunder from '../start/thunder.js';
-import ReversBackGround from '../start/reversBackground.js';
+import GotoStage from '../select/gotoStage.js';
 
 const WIDTH = 1024;
 const HEIGHT = 640;
@@ -20,7 +17,6 @@ export default class GameCanvas {
 	#obj
 	#ctx
 	#currentScreen
-	#title
 	#levelSelection
 	#loading
 	#map
@@ -36,8 +32,7 @@ export default class GameCanvas {
 	#selectBackground
 	#levelButton
 	#background
-	#reversBackground
-	#thunder
+	#gotoStage
 	constructor() {
 		this.#obj = document.createElement('canvas');
 		this.#obj.tabIndex = 0;
@@ -56,8 +51,6 @@ export default class GameCanvas {
 		
 		this.#sfx = new SFX();
 		this.#background = new BackGround()
-		this.#thunder = new Thunder()
-		this.#reversBackground = new ReversBackGround()
 		this.#startBtn = new StartBtn();
 		this.#reset = false;
 		this.#btn = true
@@ -66,10 +59,10 @@ export default class GameCanvas {
 		this.#clearStage = [false, false, false];
 		this.#map = new Map(this.#stageIndex);
 		this.#player = new Player(this.#stageIndex);
-		this.#timer = new Timer();
+		// this.#timer = new Timer();
 		this.#selectBackground = new SelectBackground();
 		this.#levelButton = new LevelButton();
-
+		this.#gotoStage = new GotoStage();
 		// this.#obj.onmousedown = this.mouseDownHandler.bind(this);
 
 		this.#obj.addEventListener('click', this.mouseClick.bind(this));
@@ -121,7 +114,7 @@ export default class GameCanvas {
 							this.#btn = true;
 							this.#sfx.pauseTitle();
 							this.drawLevelSelectionScreen();
-						}, 100);
+						}, 1000);
 						this.#btn = false
 						this.#ctx.drawImage(this.#loading, 0, 0, this.#obj.width, this.#obj.height);
 					}
@@ -141,7 +134,7 @@ export default class GameCanvas {
 						this.#clearStage[this.#stageIndex] = false;
 						this.#map = new Map(this.#stageIndex);
 						this.#player = new Player(this.#stageIndex);
-						this.#timer = new Timer();
+						// this.#timer = new Timer();
 						setTimeout(() => {
 							// this.#sfx.pauseSelection();
 							this.run();
@@ -164,7 +157,7 @@ export default class GameCanvas {
 						this.#clearStage[this.#stageIndex] = false;
 						this.#map = new Map(this.#stageIndex);
 						this.#player = new Player(this.#stageIndex);
-						this.#timer = new Timer();
+						// this.#timer = new Timer();
 						setTimeout(() => {
 							this.#sfx.pauseSelection();
 							this.run();
@@ -185,7 +178,7 @@ export default class GameCanvas {
 						this.#clearStage[this.#stageIndex] = false;
 						this.#map = new Map(this.#stageIndex);
 						this.#player = new Player(this.#stageIndex);
-						this.#timer = new Timer();
+						// this.#timer = new Timer();
 						setTimeout(() => {
 							this.run();
 						}, 100)
@@ -193,6 +186,20 @@ export default class GameCanvas {
 						this.#ctx.drawImage(this.#loading, 0, 0, this.#obj.width, this.#obj.height);
 				}
 				break;
+			case 'runScreen':
+				if (3 <= e.offsetX && e.offsetX <= 55 &&
+					5 <= e.offsetY && e.offsetY <= 55) {
+					this.#currentScreen = 'levelSelectionScreen';
+					setTimeout(() => {
+						this.#btn = true;
+						this.#sfx.pauseTitle();
+						this.#obj.width = WIDTH;
+						this.#obj.height = HEIGHT;
+						this.drawLevelSelectionScreen();
+					}, 100);
+					this.#btn = false
+					this.#ctx.drawImage(this.#loading, 0, 0, this.#obj.width, this.#obj.height);
+				}
 		}
 	}
 
@@ -267,7 +274,7 @@ export default class GameCanvas {
 	update() {
 		// player의 위치 update 후 map에 존재하는 객체들과 충돌 검사
 		// 이후 정답 검사
-		this.#timer.decreaseTime();
+		// this.#timer.decreaseTime();
 		// this.#sfx.play();
 		this.#player.update();
 		this.#map.detectCollisionWith(this.#player);
@@ -275,7 +282,8 @@ export default class GameCanvas {
 
 	paint() {
 		this.#map.draw(this.#ctx);
-		this.#timer.draw(this.#ctx);
+		this.#gotoStage.draw(this.#ctx);
+		// this.#timer.draw(this.#ctx);
 		this.#player.draw(this.#ctx);
 	}
 
@@ -286,11 +294,11 @@ export default class GameCanvas {
 		}
 	}
 
-	checkTimeOut() {
-		let isZero = this.#timer.checkTime();
-		if (isZero)
-			return true;
-	}
+	// checkTimeOut() {
+	// 	// let isZero = this.#timer.checkTime();
+	// 	if (isZero)
+	// 		return true;
+	// }
 
 	showTimeOutMessage() {
 		const centerX = this.#obj.width / 2;
@@ -319,14 +327,14 @@ export default class GameCanvas {
 		this.paint();
 
 		let isClear = this.checkClear();
-		let isTimeOut = this.checkTimeOut();
+		// let isTimeOut = this.checkTimeOut();
 
 		if (this.#reset) {
 			this.#reset = false;
 
 			this.#map = new Map(this.#stageIndex);
 			this.#player = new Player(this.#stageIndex);
-			this.#timer = new Timer(this.#stageIndex);
+			// this.#timer = new Timer(this.#stageIndex);
 		}
 
 		if (isClear && this.#stageIndex == 2) {
@@ -355,10 +363,10 @@ export default class GameCanvas {
 			return;
 		}
 
-		if (isTimeOut) {
-			this.showTimeOutMessage();
-			return;
-		}
+		// if (isTimeOut) {
+		// 	this.showTimeOutMessage();
+		// 	return;
+		// }
 		
 		requestAnimationFrame(this.run.bind(this));
 		// requestAnimationFrame이 블록 최상단에 있을 때랑 최하단에 있을 때 차이 발생

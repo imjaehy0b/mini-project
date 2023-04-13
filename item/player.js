@@ -9,13 +9,21 @@ export default
     #height
     #step
     #direction
+    #walkIndex
+    #walkDirection
+    #walkDelay
+   
     constructor(stageIndex) {
         this.#img = document.getElementById("player");
         this.#x = playerPosition[stageIndex][0];
         this.#y = playerPosition[stageIndex][1];
-        this.#width = 64;
-        this.#height = 64;
+        this.#width = this.#img.width / 3;
+        this.#height = this.#img.height / 4;
         this.#step = 1;
+
+        this.#walkIndex = 1;
+        this.#walkDirection = 0;
+        this.#walkDelay = 10;
 
         this.#direction = {
             up: false,
@@ -23,28 +31,21 @@ export default
             left: false,
             right: false,
         };
-
     }
 
-    // player가 움직일 direction을 설정 
-    move(direction) {
-        switch (direction) {
-            case "up":
-                this.setDirection("up");
-                break;
-            case "down":
-                this.setDirection("down");
-                break;
-            case "left":
-                this.setDirection("left");
-                break;
-            case "right":
-                this.setDirection("right");
-                break;
-        }
+    draw(ctx) {
+        let img = this.#img;
+        let x = this.#x;
+        let y = this.#y;
+        let w = this.#width;
+        let h = this.#height;
+        let sx = w*this.#walkIndex;
+        let sy = h*this.#walkDirection;
+        ctx.drawImage(
+            img, sx, sy, w, h,
+            x*64, y*64, 64, 64);
     }
 
-    // player의 direction으로 한 칸 움직인 뒤 vx와 vy를 0으로 만들어 더이상 움직이지 않게 만듬 
     update() {
         if (this.#direction.up) {
             this.#y -= this.#step;
@@ -59,15 +60,35 @@ export default
             this.#x += this.#step;
             this.#step = 0;
         }
+
+        this.#walkDelay--;
+        if(this.#walkDelay ==0) {
+            this.#walkIndex = (this.#walkIndex ==0) ? 2 : 0;
+            this.#walkDelay = 10;
+        }
+
     }
 
-    draw(ctx) {
-        let img = this.#img;
-        let x = this.#x;
-        let y = this.#y;
-        let width = this.#width;
-        let height = this.#height;
-        ctx.drawImage(img, x * width, y * height, width, height);
+    // player가 움직일 direction을 설정 
+    move(direction) {
+        switch (direction) {
+            case "up":
+                this.setDirection("up");
+                this.#walkDirection = 2;
+                break;
+            case "down":
+                this.setDirection("down");
+                this.#walkDirection = 0;
+                break;
+            case "left":
+                this.setDirection("left");
+                this.#walkDirection = 1;
+                break;
+            case "right":
+                this.setDirection("right");
+                this.#walkDirection = 3;
+                break;
+        }
     }
 
     setStep() {
