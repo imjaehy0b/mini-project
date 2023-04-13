@@ -49,10 +49,11 @@ export default class GameCanvas {
 		this.#ctx = this.#obj.getContext('2d');
 
 		this.#currentScreen = 'titleScreen';
-
+		
+		this.#sfx = new SFX();
 		this.#levelSelection = document.getElementById('levelSelectionScreen');
 		this.#loading = document.getElementById('loadingScreen');
-
+		
 		this.#background = new BackGround()
 		this.#thunder = new Thunder()
 		this.#reversBackground = new ReversBackGround()
@@ -66,7 +67,6 @@ export default class GameCanvas {
 		this.#timer = new Timer();
 		this.#selectBackground = new SelectBackground();
 		this.#levelButton = new LevelButton();
-		// this.#sfx = new SFX();
 
 		// this.#obj.onmousedown = this.mouseDownHandler.bind(this);
 
@@ -83,12 +83,14 @@ export default class GameCanvas {
 			this.#background.draw(this.#ctx)//기본배경
 			this.#background.update(this.#ctx)
 			this.#startBtn.draw(this.#ctx)
+			this.#sfx.playTitle();
 		}
 	}
 
 	drawLevelSelectionScreen() {
 		if (this.#btn) {
 			requestAnimationFrame(this.drawLevelSelectionScreen.bind(this));
+			this.#sfx.playSelection();
 			this.#selectBackground.draw(this.#ctx)//기본배경
 			this.#levelButton.draw(this.#ctx)		
 		}
@@ -114,7 +116,8 @@ export default class GameCanvas {
 					&& 490 <= e.offsetY && e.offsetY <= 560) {
 						this.#currentScreen = 'levelSelectionScreen';
 						setTimeout(() => {
-							this.#btn = true
+							this.#btn = true;
+							this.#sfx.pauseTitle();
 							this.drawLevelSelectionScreen();
 						}, 100);
 						this.#btn = false
@@ -129,11 +132,15 @@ export default class GameCanvas {
 					295 <= e.offsetY && 
 					e.offsetY <= 380
 					) {
+						this.#obj.width = 576;
+						this.#obj.height = 384;
 						this.#currentScreen = 'runScreen';
 						this.#stageIndex = 0;
 						setTimeout(() => {
+							// this.#sfx.pauseSelection();
 							this.run();
 						}, 100)
+						this.#sfx.pauseSelection();
 						this.#ctx.drawImage(this.#loading, 0, 0, this.#obj.width, this.#obj.height);
 					}
 				else if (
@@ -142,12 +149,16 @@ export default class GameCanvas {
 					250 <= e.offsetY && 
 					e.offsetY <= 350
 					) {
+						this.#obj.width = 384;
+						this.#obj.height = 448;
+
 						this.#currentScreen = 'runScreen';
 						this.#stageIndex = 1;
 						this.#map = new Map(this.#stageIndex);
 						this.#player = new Player(this.#stageIndex);
 						this.#timer = new Timer();
 						setTimeout(() => {
+							this.#sfx.pauseSelection();
 							this.run();
 						}, 100)
 						this.#ctx.drawImage(this.#loading, 0, 0, this.#obj.width, this.#obj.height);
@@ -158,6 +169,8 @@ export default class GameCanvas {
 					250 <= e.offsetY && 
 					e.offsetY <= 350
 					) {
+						this.#obj.width = 448;
+						this.#obj.height = 448;
 						this.#currentScreen = 'runScreen';
 						this.#stageIndex = 2;
 						this.#map = new Map(this.#stageIndex);
@@ -290,6 +303,7 @@ export default class GameCanvas {
 
 	run() {
 		this.#ctx.clearRect(0, 0, this.#obj.width, this.#obj.height);
+		this.#sfx.playStage();
 		this.update();
 		this.paint();
 
@@ -300,8 +314,8 @@ export default class GameCanvas {
 			this.#reset = false;
 
 			this.#map = new Map(this.#stageIndex);
-			this.#player = new Player();
-			this.#timer = new Timer();
+			this.#player = new Player(this.#stageIndex);
+			this.#timer = new Timer(this.#stageIndex);
 		}
 
 		if (isClear) {
