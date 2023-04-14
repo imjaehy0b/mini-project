@@ -46,19 +46,22 @@ export default class LevelButton {
     this.#hardImg2 = document.getElementById('hardButton');
     this.#hardHover = document.getElementById('hardHover');
 
-    this.#width = 150;
+
+    this.#width = 200;
     this.#height = 100;
 
-    this.#x = 200;
-    this.#x2 = 480;
-    this.#x3 = 750;
-    this.#y = 250;
+    this.#x = 110;
+    this.#x2 = 415;
+    this.#x3 = 710;
+    this.#y = 280;
 
-    this.#stageX = 50
-    this.#stageY = 50
+    this.#stageX = 0
+    this.#stageY = 100
     this.#stageW = 200
     this.#stageH = 150
   }
+
+  //1024 640
 
   buttonHover(e) {
     if (

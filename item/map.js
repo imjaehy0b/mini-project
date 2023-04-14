@@ -14,7 +14,6 @@ export default
     #holeArray
     #wormHoleArray
     #boxArray
-    #onWormHole
     constructor(stageIndex) {
         this.#stageIndex = stageIndex;
         this.#map1d = mapArray[this.#stageIndex];
@@ -25,7 +24,6 @@ export default
         this.#wormHoleArray = [];
         this.#boxArray = [];
         this.#mapBlocks = this.#map2d.make2dBlockArray(this.#holeArray, this.#wormHoleArray, this.#boxArray, this.#stageIndex);
-        this.#onWormHole = null;
     }
 
     detectCollisionWith(player) {
@@ -54,9 +52,7 @@ export default
             }
         } else if (block instanceof Wall) {
             player.resetPosition();
-        } else if (block instanceof WormHole) {
-            this.#onWormHole();
-        }
+        } 
     }
 
     changeBoxPosition(x, y, direction) {
@@ -333,9 +329,6 @@ export default
         return this.#map2d;
     }
 
-    set onWormHole(callback) {
-        this.#onWormHole = callback;
-    }
 }
 
 

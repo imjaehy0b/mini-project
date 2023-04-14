@@ -1,6 +1,6 @@
 /** @type {HTMLCanvasElement} */
 
-import Timer from '../item/timer.js';
+// import Timer from '../item/timer.js';
 import Map from '../item/map.js';
 import Player from '../item/player.js';
 import StartBtn from '../start/startBtn.js';
@@ -9,7 +9,8 @@ import SelectBackground from '../select/selectBackground.js';
 import LevelButton from '../select/levelButton.js';
 import BackGround from '../start/background.js';
 import GotoStage from '../select/gotoStage.js';
-
+import Layer from '../story/layer.js';
+import Ending from '../ending/ending.js';
 const WIDTH = 1024;
 const HEIGHT = 640;
 
@@ -21,7 +22,7 @@ export default class GameCanvas {
 	#loading
 	#map
 	#player
-	#timer
+	// #timer
 	#sfx
 	#layer
 	#reset
@@ -33,6 +34,7 @@ export default class GameCanvas {
 	#levelButton
 	#background
 	#gotoStage
+	#ending
 	constructor() {
 		this.#obj = document.createElement('canvas');
 		this.#obj.tabIndex = 0;
@@ -45,25 +47,27 @@ export default class GameCanvas {
 		this.#ctx = this.#obj.getContext('2d');
 
 		this.#currentScreen = 'titleScreen';
-		
+
 		this.#levelSelection = document.getElementById('levelSelectionScreen');
 		this.#loading = document.getElementById('loadingScreen');
-		
+
 		this.#sfx = new SFX();
 		this.#background = new BackGround()
 		this.#startBtn = new StartBtn();
+		this.#layer = new Layer();
 		this.#reset = false;
 		this.#btn = true
 
 		this.#stageIndex = 0;
 		this.#clearStage = [false, false, false];
 		this.#map = new Map(this.#stageIndex);
-		
+
 		this.#player = new Player(this.#stageIndex);
 		// this.#timer = new Timer();
 		this.#selectBackground = new SelectBackground();
 		this.#levelButton = new LevelButton();
 		this.#gotoStage = new GotoStage();
+		this.#ending = new Ending();
 		// this.#obj.onmousedown = this.mouseDownHandler.bind(this);
 
 		this.#obj.addEventListener('click', this.mouseClick.bind(this));
@@ -83,13 +87,42 @@ export default class GameCanvas {
 		}
 	}
 
+	drawStroyScreen() {
+		if (this.#layer.bol) {
+			requestAnimationFrame(this.drawStroyScreen.bind(this));
+			this.#layer.update()
+			this.#layer.draw(this.#ctx)
+		}
+		if (!this.#layer.bol) {
+			this.#currentScreen = 'levelSelectionScreen'
+		}
+	}
+
+	drawEndingScreen() {
+		// requestAnimationFrame(this.drawEndingScreen.bind(this));
+        // if (this.#btn) {
+			this.#ending.draw(this.#ctx);
+			this.#ending.update();
+        // }
+        // console.log("testEnding");
+    }
+
 	drawLevelSelectionScreen() {
+	
 		if (this.#btn) {
 			requestAnimationFrame(this.drawLevelSelectionScreen.bind(this));
 			this.#sfx.playSelection();
 			this.#selectBackground.draw(this.#ctx)//기본배경
-			this.#levelButton.draw(this.#ctx)		
+			this.#levelButton.draw(this.#ctx)
 		}
+
+		// this.#ctx.drawImage(this.#loading, 0, 0, this.#obj.width, this.#obj.height);
+		// if (this.#btn) {
+		// 	requestAnimationFrame(this.drawLevelSelectionScreen.bind(this));
+		// 	this.#sfx.playSelection();
+		// 	this.#selectBackground.draw(this.#ctx)//기본배경
+		// 	this.#levelButton.draw(this.#ctx)
+		// }
 
 		// let img = this.#levelSelection;
 		// let width = this.#obj.width;
@@ -103,110 +136,109 @@ export default class GameCanvas {
 		this.#startBtn.buttonHover(e);
 		this.#levelButton.buttonHover(e)
 	}
-	
+
 	mouseClick(e) {
 		console.log(e.offsetX, e.offsetY)
 		switch (this.#currentScreen) {
-			case 'titleScreen': 
-				if (400 <= e.offsetX && e.offsetX <= 590 
-					&& 490 <= e.offsetY && e.offsetY <= 560) {
+			case 'titleScreen':
+				if (400 <= e.offsetX && e.offsetX <= 650
+					&& 520 <= e.offsetY && e.offsetY <= 620) {
 					this.#currentScreen = 'levelSelectionScreen';
+					this.drawStroyScreen();
+					// this.drawEndingScreen();
 					setTimeout(() => {
 						this.#btn = true;
 						this.#sfx.pauseTitle();
 						this.drawLevelSelectionScreen();
-					}, 700);
+					}, 19000);
 					this.#btn = false
 					this.#ctx.drawImage(this.#loading, 0, 0, this.#obj.width, this.#obj.height);
 				}
 				break;
 
-			case 'levelSelectionScreen': 
+			case 'levelSelectionScreen':
 				if (
-					210 <= e.offsetX && 
-					e.offsetX <= 290 && 
-					295 <= e.offsetY && 
+					110 <= e.offsetX &&
+					e.offsetX <= 310 &&
+					280 <= e.offsetY &&
 					e.offsetY <= 380
-					) {
-						this.#currentScreen = 'runScreen';
-						this.#stageIndex = 0;
-						this.#clearStage[this.#stageIndex] = false;
-						this.#map = new Map(this.#stageIndex);
-						this.#player = new Player(this.#stageIndex);
-						// this.#timer = new Timer();
-						setTimeout(() => {
-							// this.#sfx.pauseSelection();
-							this.#obj.width = 576;
-							this.#obj.height = 384;
-							this.run();
-						}, 700)
-						this.#btn = false;
+				) {
+					this.#currentScreen = 'runScreen';
+					this.#stageIndex = 0;
+					this.#clearStage[this.#stageIndex] = false;
+					this.#map = new Map(this.#stageIndex);
+					this.#player = new Player(this.#stageIndex);
+					// this.#timer = new Timer();
+					setTimeout(() => {
 						this.#sfx.pauseSelection();
-						this.#ctx.drawImage(this.#loading, 0, 0, this.#obj.width, this.#obj.height);
-					}
-				else if (
-					480 <= e.offsetX && 
-					e.offsetX <= 630 && 
-					250 <= e.offsetY && 
-					e.offsetY <= 350
-					) {
-						this.#currentScreen = 'runScreen';
-						this.#stageIndex = 1;
-						this.#clearStage[this.#stageIndex] = false;
-						this.#map = new Map(this.#stageIndex);
-						this.#player = new Player(this.#stageIndex);
-						// this.#timer = new Timer();
-						setTimeout(() => {
-							this.#sfx.pauseSelection();
-							
-							this.#obj.width = 384;
-							this.#obj.height = 448;
-							this.run();
-						}, 700)
-						this.#btn = false;
-						this.#ctx.drawImage(this.#loading, 0, 0, this.#obj.width, this.#obj.height);
+						this.#obj.width = 576;
+						this.#obj.height = 384;
+						this.run();
+					}, 700)
+					this.#btn = false;
+					this.#sfx.pauseSelection();
+					this.#ctx.drawImage(this.#loading, 0, 0, this.#obj.width, this.#obj.height);
 				}
 				else if (
-					750 <= e.offsetX && 
-					e.offsetX <= 900 && 
-					250 <= e.offsetY && 
-					e.offsetY <= 350
-					) {
-						this.#currentScreen = 'runScreen';
-						this.#stageIndex = 2;
-						this.#clearStage[this.#stageIndex] = false;
-						this.#map = new Map(this.#stageIndex);
-						this.#player = new Player(this.#stageIndex);
-						// this.#timer = new Timer();
-						setTimeout(() => {
-							this.#obj.width = 448;
-							this.#obj.height = 448;
-							this.#map.onWormHole = this.onWormHoleHandler;
-							this.run();
-						}, 700)
-						this.#btn = false;
-						this.#ctx.drawImage(this.#loading, 0, 0, this.#obj.width, this.#obj.height);
+					415 <= e.offsetX &&
+					e.offsetX <= 615 &&
+					280 <= e.offsetY &&
+					e.offsetY <= 380
+				) {
+					this.#currentScreen = 'runScreen';
+					this.#stageIndex = 1;
+					this.#clearStage[this.#stageIndex] = false;
+					this.#map = new Map(this.#stageIndex);
+					this.#player = new Player(this.#stageIndex);
+					// this.#timer = new Timer();
+					setTimeout(() => {
+						this.#sfx.pauseSelection();
+
+						this.#obj.width = 640;
+						this.#obj.height = 512;
+						this.run();
+					}, 700)
+					this.#btn = false;
+					this.#ctx.drawImage(this.#loading, 0, 0, this.#obj.width, this.#obj.height);
+				}
+				else if (
+					710 <= e.offsetX &&
+					e.offsetX <= 910 &&
+					280 <= e.offsetY &&
+					e.offsetY <= 380
+				) {
+					this.#currentScreen = 'runScreen';
+					this.#stageIndex = 2;
+					this.#clearStage[this.#stageIndex] = false;
+					this.#map = new Map(this.#stageIndex);
+					this.#player = new Player(this.#stageIndex);
+					// this.#timer = new Timer();
+					setTimeout(() => {
+						this.#sfx.pauseSelection();
+
+						this.#obj.width = 448;
+						this.#obj.height = 448;
+						this.run();
+					}, 700)
+					this.#btn = false;
+					this.#ctx.drawImage(this.#loading, 0, 0, this.#obj.width, this.#obj.height);
 				}
 				break;
 			case 'runScreen':
-				if (3 <= e.offsetX && e.offsetX <= 55 &&
-					5 <= e.offsetY && e.offsetY <= 55) {
+				if (3 <= e.offsetX && e.offsetX <= 60 &&
+					3 <= e.offsetY && e.offsetY <= 60) {
 					this.#currentScreen = 'levelSelectionScreen';
 					setTimeout(() => {
 						this.#btn = true;
-						this.#sfx.pauseTitle();
 						this.#obj.width = WIDTH;
 						this.#obj.height = HEIGHT;
 						this.drawLevelSelectionScreen();
 					}, 1000);
+					this.#sfx.pauseStage();
 					this.#btn = false
 					this.#ctx.drawImage(this.#loading, 0, 0, this.#obj.width, this.#obj.height);
 				}
 		}
-	}
-
-	onWormHoleHandler() {
-		this.#stageIndex = 3; 
 	}
 
 	keyDownHandler(e) {
@@ -309,7 +341,7 @@ export default class GameCanvas {
 	showTimeOutMessage() {
 		const centerX = this.#obj.width / 2;
 		const centerY = this.#obj.height / 2;
-	
+
 		this.#ctx.fillStyle = "white";
 		this.#ctx.font = "96px Arial";
 		this.#ctx.textAlign = "center";
@@ -319,7 +351,7 @@ export default class GameCanvas {
 	showClearMessage() {
 		const centerX = this.#obj.width / 2;
 		const centerY = this.#obj.height / 2;
-	
+
 		this.#ctx.fillStyle = "black";
 		this.#ctx.font = "96px Arial";
 		this.#ctx.textAlign = "center";
@@ -348,7 +380,15 @@ export default class GameCanvas {
 			console.log(this.#clearStage);
 			if (this.#clearStage[0] && this.#clearStage[1] && this.#clearStage[2]) {
 				this.#map.openWormHole();
-
+				if (this.#player.x == 6 && this.#player.y == 3) {
+					this.#sfx.pauseStage();
+					this.#sfx.playEnding();
+					this.#currentScreen = 'levelSelectionScreen';
+					this.#obj.width = WIDTH;
+					this.#obj.height = HEIGHT;
+					this.#btn = true;
+					this.drawEndingScreen();
+				}
 			} else {
 				this.showClearMessage();
 				this.#currentScreen = 'levelSelectionScreen';
@@ -365,7 +405,13 @@ export default class GameCanvas {
 			this.#obj.width = WIDTH;
 			this.#obj.height = HEIGHT;
 			this.#btn = true;
-			this.drawLevelSelectionScreen();
+			setTimeout(() => {
+				this.#btn = true;
+				this.#sfx.pauseTitle();
+				this.drawLevelSelectionScreen();
+			}, 1000);
+			this.#btn = false
+			this.#ctx.drawImage(this.#loading, 0, 0, this.#obj.width, this.#obj.height);
 			return;
 		}
 
@@ -373,7 +419,7 @@ export default class GameCanvas {
 		// 	this.showTimeOutMessage();
 		// 	return;
 		// }
-		
+
 		requestAnimationFrame(this.run.bind(this));
 		// requestAnimationFrame이 블록 최상단에 있을 때랑 최하단에 있을 때 차이 발생
 		// 최상단에 있을 때는 return의 영향을 받지 않고 123이 계속 출력 되고
